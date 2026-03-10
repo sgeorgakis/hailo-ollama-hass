@@ -1,0 +1,30 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Ligar ao Hailo Ollama",
+        "description": "Introduza os dados de ligação do seu servidor Hailo-Ollama.",
+        "data": {
+          "host": "Anfitrião",
+          "port": "Porta"
+        }
+      },
+      "pick_model": {
+        "title": "Selecionar modelo",
+        "description": "Modelos encontrados no seu dispositivo Hailo:",
+        "data": {
+          "model": "Modelo",
+          "system_prompt": "Instrução do sistema",
+          "streaming": "Utilizar respostas em streaming"
+        },
+        "data_description": {
+          "streaming": "Ative para receber tokens progressivamente. Desative para obter uma única resposta completa (mais simples, mas terá de aguardar pela resposta integral)."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Não é possível ligar ao Hailo-Ollama",
+      "no_models": "Nenhum modelo encontrado no dispositivo"
+    }
+  }
+}

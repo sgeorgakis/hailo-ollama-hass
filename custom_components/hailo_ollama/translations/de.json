@@ -1,0 +1,30 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Mit Hailo Ollama verbinden",
+        "description": "Geben Sie die Verbindungsdaten für Ihren Hailo-Ollama-Server ein.",
+        "data": {
+          "host": "Host",
+          "port": "Port"
+        }
+      },
+      "pick_model": {
+        "title": "Modell auswählen",
+        "description": "Auf Ihrem Hailo-Gerät gefundene Modelle:",
+        "data": {
+          "model": "Modell",
+          "system_prompt": "Systemaufforderung",
+          "streaming": "Streaming-Antworten verwenden"
+        },
+        "data_description": {
+          "streaming": "Aktivieren für Token-für-Token-Streaming. Deaktivieren für eine einzelne Antwort (einfacher, aber Sie warten auf die vollständige Antwort)."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Verbindung zu Hailo-Ollama nicht möglich",
+      "no_models": "Keine Modelle auf dem Gerät gefunden"
+    }
+  }
+}
