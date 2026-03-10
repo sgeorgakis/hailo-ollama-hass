@@ -10,6 +10,7 @@ from custom_components.hailo_ollama.const import (
     CONF_HOST,
     CONF_MODEL,
     CONF_PORT,
+    CONF_SHOW_THINKING,
     CONF_STREAMING,
     CONF_SYSTEM_PROMPT,
     DEFAULT_SYSTEM_PROMPT,
@@ -204,3 +205,45 @@ async def test_call_non_streaming_connection_error(mock_config_entry):
             await entity._call_non_streaming(messages)
 
     assert "Cannot connect" in str(exc_info.value)
+
+
+def test_show_thinking_false_strips_tags(mock_config_entry):
+    """When show_thinking is False, <think> tags are stripped from the response."""
+    mock_config_entry.data = {**mock_config_entry.data, CONF_SHOW_THINKING: False}
+    entity = HailoOllamaConversationEntity(mock_config_entry)
+
+    response = "<think>Internal reasoning here.</think>The actual answer."
+    from custom_components.hailo_ollama.conversation import THINK_TAG_RE
+    result = THINK_TAG_RE.sub("", response).strip() if not entity._show_thinking else response.strip()
+
+    assert result == "The actual answer."
+    assert "<think>" not in result
+
+
+def test_show_thinking_true_keeps_tags(mock_config_entry):
+    """When show_thinking is True, <think> tags are preserved in the response."""
+    mock_config_entry.data = {**mock_config_entry.data, CONF_SHOW_THINKING: True}
+    entity = HailoOllamaConversationEntity(mock_config_entry)
+
+    response = "<think>Internal reasoning here.</think>The actual answer."
+    from custom_components.hailo_ollama.conversation import THINK_TAG_RE
+    result = THINK_TAG_RE.sub("", response).strip() if not entity._show_thinking else response.strip()
+
+    assert "<think>" in result
+    assert "Internal reasoning here." in result
+
+
+def test_show_thinking_defaults_to_false(mock_config_entry):
+    """show_thinking defaults to False when not set in config entry."""
+    entry = MagicMock()
+    entry.entry_id = "test"
+    entry.data = {
+        CONF_HOST: "localhost",
+        CONF_PORT: 8000,
+        CONF_MODEL: "llama3.2:3b",
+        CONF_SYSTEM_PROMPT: DEFAULT_SYSTEM_PROMPT,
+        CONF_STREAMING: False,
+        # CONF_SHOW_THINKING intentionally omitted
+    }
+    entity = HailoOllamaConversationEntity(entry)
+    assert entity._show_thinking is False

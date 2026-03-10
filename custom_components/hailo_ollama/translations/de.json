@@ -15,10 +15,12 @@
         "data": {
           "model": "Modell",
           "system_prompt": "Systemaufforderung",
-          "streaming": "Streaming-Antworten verwenden"
+          "streaming": "Streaming-Antworten verwenden",
+          "show_thinking": "Denkprozess anzeigen"
         },
         "data_description": {
-          "streaming": "Aktivieren für Token-für-Token-Streaming. Deaktivieren für eine einzelne Antwort (einfacher, aber Sie warten auf die vollständige Antwort)."
+          "streaming": "Aktivieren für Token-für-Token-Streaming. Deaktivieren für eine einzelne Antwort (einfacher, aber Sie warten auf die vollständige Antwort).",
+          "show_thinking": "Wenn aktiviert, wird der Denkprozess innerhalb von <think>-Tags in der Antwort angezeigt. Deaktivieren, um nur die endgültige Antwort zurückzugeben."
         }
       }
     },

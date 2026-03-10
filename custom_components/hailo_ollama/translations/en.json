@@ -15,10 +15,12 @@
         "data": {
           "model": "Model",
           "system_prompt": "System prompt",
-          "streaming": "Use streaming responses"
+          "streaming": "Use streaming responses",
+          "show_thinking": "Show thinking process"
         },
         "data_description": {
-          "streaming": "Enable for token-by-token streaming. Disable for a single response (simpler but you wait for the full reply)."
+          "streaming": "Enable for token-by-token streaming. Disable for a single response (simpler but you wait for the full reply).",
+          "show_thinking": "When enabled, reasoning inside <think> tags will be included in the response. Disable to return only the final answer."
         }
       }
     },

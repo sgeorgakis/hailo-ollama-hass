@@ -14,7 +14,7 @@ A Home Assistant custom integration that connects to a [Hailo-Ollama](https://gi
 - Streaming and non-streaming response modes
 - Multi-turn conversation support
 - Configurable system prompts
-- Support for DeepSeek R1 models (automatic `<think>` tag stripping)
+- Optional display of model reasoning (`<think>` tag content)
 
 ## Requirements
 
@@ -65,7 +65,7 @@ After configuration, the integration creates a conversation agent that can be us
 |--------|---------|-------------|
 | Host | `localhost` | Hailo-Ollama server hostname or IP |
 | Port | `8000` | Hailo-Ollama server port |
-| Model | `llama3.2:3b` | LLM model to use |
+| Model | *(first available)* | LLM model to use |
 | System Prompt | `You are a helpful smart home assistant. Be concise.` | System prompt for the LLM |
 | Streaming | `true` | Enable streaming responses |
 

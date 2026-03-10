@@ -15,10 +15,12 @@
         "data": {
           "model": "Modelo",
           "system_prompt": "Instrucción del sistema",
-          "streaming": "Usar respuestas en streaming"
+          "streaming": "Usar respuestas en streaming",
+          "show_thinking": "Mostrar proceso de razonamiento"
         },
         "data_description": {
-          "streaming": "Activa para recibir tokens de forma progresiva. Desactiva para recibir una única respuesta completa (más sencillo, pero tendrás que esperar hasta el final)."
+          "streaming": "Activa para recibir tokens de forma progresiva. Desactiva para recibir una única respuesta completa (más sencillo, pero tendrás que esperar hasta el final).",
+          "show_thinking": "Cuando está activado, el razonamiento dentro de las etiquetas <think> se incluirá en la respuesta. Desactiva para devolver solo la respuesta final."
         }
       }
     },

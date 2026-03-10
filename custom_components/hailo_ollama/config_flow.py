@@ -15,11 +15,13 @@ from .const import (
     CONF_HOST,
     CONF_MODEL,
     CONF_PORT,
+    CONF_SHOW_THINKING,
     CONF_STREAMING,
     CONF_SYSTEM_PROMPT,
     DEFAULT_HOST,
     DEFAULT_MODEL,
     DEFAULT_PORT,
+    DEFAULT_SHOW_THINKING,
     DEFAULT_STREAMING,
     DEFAULT_SYSTEM_PROMPT,
     DOMAIN,
@@ -134,6 +136,9 @@ class HailoOllamaConfigFlow(ConfigFlow, domain=DOMAIN):
                     CONF_STREAMING: user_input.get(
                         CONF_STREAMING, DEFAULT_STREAMING
                     ),
+                    CONF_SHOW_THINKING: user_input.get(
+                        CONF_SHOW_THINKING, DEFAULT_SHOW_THINKING
+                    ),
                 },
             )
 
@@ -152,6 +157,9 @@ class HailoOllamaConfigFlow(ConfigFlow, domain=DOMAIN):
                 ): str,
                 vol.Optional(
                     CONF_STREAMING, default=DEFAULT_STREAMING
+                ): bool,
+                vol.Optional(
+                    CONF_SHOW_THINKING, default=DEFAULT_SHOW_THINKING
                 ): bool,
             }),
         )

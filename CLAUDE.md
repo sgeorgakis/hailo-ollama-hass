@@ -13,7 +13,7 @@ The integration follows the standard Home Assistant custom component structure:
 - **`__init__.py`** - Entry point; forwards setup to the conversation platform
 - **`config_flow.py`** - Two-step UI config flow: (1) host/port connection, (2) model selection with system prompt and streaming options
 - **`conversation.py`** - The conversation entity that implements `ConversationEntity`; handles both streaming and non-streaming API calls to `/api/chat`
-- **`const.py`** - Configuration keys and defaults (host: localhost, port: 8000, model: llama3.2:3b)
+- **`const.py`** - Configuration keys and defaults (host: localhost, port: 8000)
 - **`manifest.json`** - Integration metadata; declares dependency on the `conversation` component
 
 ## API Endpoints Used
@@ -26,7 +26,7 @@ The integration communicates with the Hailo-Ollama server via:
 ## Key Implementation Details
 
 - **Streaming vs non-streaming**: Configurable per-integration instance. Streaming collects ndjson chunks; non-streaming expects a single JSON response. Non-streaming automatically falls back to streaming on `ClientPayloadError`.
-- **DeepSeek R1 support**: Response text is filtered to strip `<think>...</think>` reasoning tags before returning to the user.
+- **Reasoning tag support**: Response text can optionally strip `<think>...</think>` tags (configurable per integration instance).
 - **Chat history**: The conversation entity reads from Home Assistant's `ChatLog` to maintain multi-turn context.
 - **Timeout**: 500 seconds default (`DEFAULT_TIMEOUT`) for LLM responses.
 

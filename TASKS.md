@@ -2,9 +2,6 @@
 
 ## Features
 
-- [x] Add translations for Greek, German, Italian, Portuguese, Spanish, French, Brazilian Portuguese
-- [x] Update the project to support only Home Assistant version 2025 and on
-- [ ] Allow user to choose in configuration if they want the thinking process to be returned or not
 - [ ] Add options flow to allow reconfiguring model, system prompt, and streaming mode after initial setup
 - [ ] Expose model parameters (temperature, top_p, max_tokens) as configurable options
 - [ ] Add sensor entities for response metrics (tokens/sec, response time, token count)
@@ -23,5 +20,5 @@
 
 ## Documentation
 
-- [ ] Document required Hailo-Ollama server setup
 - [ ] Add HACS manifest for easy installation via HACS
+- [ ] Document required Hailo-Ollama server setup

@@ -21,8 +21,10 @@ from .const import (
     CONF_HOST,
     CONF_MODEL,
     CONF_PORT,
+    CONF_SHOW_THINKING,
     CONF_STREAMING,
     CONF_SYSTEM_PROMPT,
+    DEFAULT_SHOW_THINKING,
     DEFAULT_STREAMING,
     DEFAULT_SYSTEM_PROMPT,
     DEFAULT_TIMEOUT,
@@ -31,7 +33,7 @@ from .const import (
 
 _LOGGER = logging.getLogger(__name__)
 
-# DeepSeek R1 models wrap reasoning in <think>...</think>
+# Some models wrap reasoning in <think>...</think>
 THINK_TAG_RE = re.compile(r"<think>.*?</think>\s*", re.DOTALL)
 
 
@@ -60,6 +62,9 @@ class HailoOllamaConversationEntity(conversation.ConversationEntity):
             CONF_SYSTEM_PROMPT, DEFAULT_SYSTEM_PROMPT
         )
         self._streaming: bool = entry.data.get(CONF_STREAMING, DEFAULT_STREAMING)
+        self._show_thinking: bool = entry.data.get(
+            CONF_SHOW_THINKING, DEFAULT_SHOW_THINKING
+        )
         self._attr_unique_id = entry.entry_id
         self._base_url = f"http://{self._host}:{self._port}"
 
@@ -115,14 +120,17 @@ class HailoOllamaConversationEntity(conversation.ConversationEntity):
 
         elapsed = time.monotonic() - t0
 
-        # Strip <think> tags from DeepSeek R1
-        clean_text = THINK_TAG_RE.sub("", response_text).strip()
-        if clean_text != response_text:
-            _LOGGER.debug(
-                "Stripped <think> tags: %d → %d chars",
-                len(response_text),
-                len(clean_text),
-            )
+        # Conditionally strip <think> tags
+        if self._show_thinking:
+            clean_text = response_text.strip()
+        else:
+            clean_text = THINK_TAG_RE.sub("", response_text).strip()
+            if clean_text != response_text:
+                _LOGGER.debug(
+                    "Stripped <think> tags: %d → %d chars",
+                    len(response_text),
+                    len(clean_text),
+                )
 
         _LOGGER.info(
             "Hailo responded in %.1fs (%d chars): %.100s",

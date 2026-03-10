@@ -1,12 +1,14 @@
 DOMAIN = "hailo_ollama"
 DEFAULT_HOST = "localhost"
 DEFAULT_PORT = 8000
-DEFAULT_MODEL = "llama3.2:3b"
+DEFAULT_MODEL = ""
 CONF_HOST = "host"
 CONF_PORT = "port"
 CONF_MODEL = "model"
 CONF_SYSTEM_PROMPT = "system_prompt"
 CONF_STREAMING = "streaming"
+CONF_SHOW_THINKING = "show_thinking"
 DEFAULT_SYSTEM_PROMPT = "You are a helpful smart home assistant. Be concise."
 DEFAULT_STREAMING = True
+DEFAULT_SHOW_THINKING = False
 DEFAULT_TIMEOUT = 500
