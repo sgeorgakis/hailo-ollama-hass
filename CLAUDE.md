@@ -35,3 +35,20 @@ The integration communicates with the Hailo-Ollama server via:
 Install the integration by copying/symlinking this directory to `config/custom_components/hailo_ollama/` in your Home Assistant installation.
 
 No build step required. The integration uses Home Assistant's bundled dependencies (`aiohttp`, `voluptuous`).
+
+## Workflow
+- Create a new branch for a new feature
+- Always run tests for a change
+- Always write tests for a change
+- Run single tests instead of all of them for performance
+- Make sure that the project compiles
+- Make sure that all tests pass
+
+## Workflow
+- Create a new branch for a new feature
+- Always run tests for a change
+- Always write tests for a change
+- Run single tests instead of all of them for performance
+- Make sure that the project compiles
+- Make sure that all tests pass
+

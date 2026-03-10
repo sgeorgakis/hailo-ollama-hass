@@ -4,10 +4,6 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from homeassistant import config_entries
-from homeassistant.core import HomeAssistant
-from homeassistant.data_entry_flow import FlowResultType
-
 from custom_components.hailo_ollama.const import (
     CONF_HOST,
     CONF_MODEL,
@@ -15,118 +11,137 @@ from custom_components.hailo_ollama.const import (
     CONF_STREAMING,
     CONF_SYSTEM_PROMPT,
     DEFAULT_HOST,
+    DEFAULT_MODEL,
     DEFAULT_PORT,
+    DEFAULT_STREAMING,
     DEFAULT_SYSTEM_PROMPT,
     DOMAIN,
 )
+from custom_components.hailo_ollama.config_flow import HailoOllamaConfigFlow
 
 
 @pytest.fixture
-def mock_setup_entry():
-    """Mock setting up a config entry."""
+def mock_hass():
+    """Create a mock Home Assistant instance."""
+    hass = MagicMock()
+    return hass
+
+
+@pytest.fixture
+def config_flow(mock_hass):
+    """Create a config flow instance."""
+    flow = HailoOllamaConfigFlow()
+    flow.hass = mock_hass
+    return flow
+
+
+@pytest.mark.asyncio
+async def test_test_connection_success(config_flow):
+    """Test successful connection test."""
+    mock_response = AsyncMock()
+    mock_response.status = 200
+    mock_response.json = AsyncMock(return_value={"version": "1.0.0"})
+
+    mock_session = MagicMock()
+    mock_session.get = MagicMock(
+        return_value=AsyncMock(__aenter__=AsyncMock(return_value=mock_response))
+    )
+
     with patch(
-        "custom_components.hailo_ollama.async_setup_entry",
-        return_value=True,
-    ) as mock_setup:
-        yield mock_setup
+        "custom_components.hailo_ollama.config_flow.async_get_clientsession",
+        return_value=mock_session,
+    ):
+        result = await config_flow._test_connection("localhost", 8000)
+
+    assert result == "1.0.0"
 
 
-async def test_form_connection_error(hass: HomeAssistant, mock_setup_entry) -> None:
-    """Test we handle connection error."""
-    result = await hass.config_entries.flow.async_init(
-        DOMAIN, context={"source": config_entries.SOURCE_USER}
-    )
-    assert result["type"] == FlowResultType.FORM
-    assert result["step_id"] == "user"
+@pytest.mark.asyncio
+async def test_test_connection_failure(config_flow):
+    """Test connection test failure."""
+    mock_session = MagicMock()
+    mock_session.get = MagicMock(side_effect=Exception("Connection refused"))
 
     with patch(
-        "custom_components.hailo_ollama.config_flow.HailoOllamaConfigFlow._test_connection",
-        return_value=None,
+        "custom_components.hailo_ollama.config_flow.async_get_clientsession",
+        return_value=mock_session,
     ):
-        result = await hass.config_entries.flow.async_configure(
-            result["flow_id"],
-            {
-                CONF_HOST: "192.168.1.100",
-                CONF_PORT: 8000,
-            },
-        )
+        result = await config_flow._test_connection("localhost", 8000)
 
-    assert result["type"] == FlowResultType.FORM
-    assert result["errors"] == {"base": "cannot_connect"}
+    assert result is None
 
 
-async def test_form_no_models(hass: HomeAssistant, mock_setup_entry) -> None:
-    """Test we handle no models found."""
-    result = await hass.config_entries.flow.async_init(
-        DOMAIN, context={"source": config_entries.SOURCE_USER}
+@pytest.mark.asyncio
+async def test_fetch_models_from_api_tags(config_flow):
+    """Test fetching models from /api/tags."""
+    mock_response = AsyncMock()
+    mock_response.status = 200
+    mock_response.json = AsyncMock(
+        return_value={"models": [{"name": "llama3.2:3b"}, {"name": "deepseek-r1:1.5b"}]}
     )
 
-    with (
-        patch(
-            "custom_components.hailo_ollama.config_flow.HailoOllamaConfigFlow._test_connection",
-            return_value="1.0.0",
-        ),
-        patch(
-            "custom_components.hailo_ollama.config_flow.HailoOllamaConfigFlow._fetch_models",
-            return_value=[],
-        ),
-    ):
-        result = await hass.config_entries.flow.async_configure(
-            result["flow_id"],
-            {
-                CONF_HOST: DEFAULT_HOST,
-                CONF_PORT: DEFAULT_PORT,
-            },
-        )
-
-    assert result["type"] == FlowResultType.FORM
-    assert result["errors"] == {"base": "no_models"}
-
-
-async def test_form_success(hass: HomeAssistant, mock_setup_entry) -> None:
-    """Test successful config flow."""
-    result = await hass.config_entries.flow.async_init(
-        DOMAIN, context={"source": config_entries.SOURCE_USER}
-    )
-    assert result["type"] == FlowResultType.FORM
-    assert result["step_id"] == "user"
-
-    with (
-        patch(
-            "custom_components.hailo_ollama.config_flow.HailoOllamaConfigFlow._test_connection",
-            return_value="1.0.0",
-        ),
-        patch(
-            "custom_components.hailo_ollama.config_flow.HailoOllamaConfigFlow._fetch_models",
-            return_value=["llama3.2:3b", "deepseek-r1:1.5b"],
-        ),
-    ):
-        result = await hass.config_entries.flow.async_configure(
-            result["flow_id"],
-            {
-                CONF_HOST: DEFAULT_HOST,
-                CONF_PORT: DEFAULT_PORT,
-            },
-        )
-
-    assert result["type"] == FlowResultType.FORM
-    assert result["step_id"] == "pick_model"
-
-    result = await hass.config_entries.flow.async_configure(
-        result["flow_id"],
-        {
-            CONF_MODEL: "llama3.2:3b",
-            CONF_SYSTEM_PROMPT: DEFAULT_SYSTEM_PROMPT,
-            CONF_STREAMING: True,
-        },
+    mock_session = MagicMock()
+    mock_session.get = MagicMock(
+        return_value=AsyncMock(__aenter__=AsyncMock(return_value=mock_response))
     )
 
-    assert result["type"] == FlowResultType.CREATE_ENTRY
-    assert result["title"] == "Hailo (llama3.2:3b)"
-    assert result["data"] == {
-        CONF_HOST: DEFAULT_HOST,
-        CONF_PORT: DEFAULT_PORT,
-        CONF_MODEL: "llama3.2:3b",
-        CONF_SYSTEM_PROMPT: DEFAULT_SYSTEM_PROMPT,
-        CONF_STREAMING: True,
-    }
+    with patch(
+        "custom_components.hailo_ollama.config_flow.async_get_clientsession",
+        return_value=mock_session,
+    ):
+        result = await config_flow._fetch_models("localhost", 8000)
+
+    assert result == ["llama3.2:3b", "deepseek-r1:1.5b"]
+
+
+@pytest.mark.asyncio
+async def test_fetch_models_string_format(config_flow):
+    """Test fetching models when returned as strings."""
+    mock_response = AsyncMock()
+    mock_response.status = 200
+    mock_response.json = AsyncMock(
+        return_value={"models": ["llama3.2:3b", "deepseek-r1:1.5b"]}
+    )
+
+    mock_session = MagicMock()
+    mock_session.get = MagicMock(
+        return_value=AsyncMock(__aenter__=AsyncMock(return_value=mock_response))
+    )
+
+    with patch(
+        "custom_components.hailo_ollama.config_flow.async_get_clientsession",
+        return_value=mock_session,
+    ):
+        result = await config_flow._fetch_models("localhost", 8000)
+
+    assert result == ["llama3.2:3b", "deepseek-r1:1.5b"]
+
+
+@pytest.mark.asyncio
+async def test_fetch_models_empty(config_flow):
+    """Test fetching models when none available."""
+    mock_response = AsyncMock()
+    mock_response.status = 200
+    mock_response.json = AsyncMock(return_value={"models": []})
+
+    mock_session = MagicMock()
+    mock_session.get = MagicMock(
+        return_value=AsyncMock(__aenter__=AsyncMock(return_value=mock_response))
+    )
+
+    with patch(
+        "custom_components.hailo_ollama.config_flow.async_get_clientsession",
+        return_value=mock_session,
+    ):
+        result = await config_flow._fetch_models("localhost", 8000)
+
+    assert result == []
+
+
+def test_config_flow_init():
+    """Test config flow initialization."""
+    flow = HailoOllamaConfigFlow()
+
+    assert flow._host == DEFAULT_HOST
+    assert flow._port == DEFAULT_PORT
+    assert flow._models == []

@@ -1,9 +1,5 @@
 # Future Tasks
 
-## Bug Fixes
-
-- [x] Fix type hint in `config_flow.py:92` - `async_step_user` returns `TypedDict` instead of `ConfigFlowResult`
-
 ## Features
 
 - [ ] Add translations for Greek, German, Italian, Portuguese, Spanish, French, Brazilian Portuguese
@@ -21,12 +17,10 @@
 
 ## Code Quality
 
-- [x] Add unit tests for config flow and conversation entity
 - [ ] Add integration tests with mocked Hailo-Ollama server
 - [ ] More granular error types (connection refused vs timeout vs invalid response)
 
 ## Documentation
 
-- [x] Add README.md with installation instructions and screenshots
 - [ ] Document required Hailo-Ollama server setup
 - [ ] Add HACS manifest for easy installation via HACS

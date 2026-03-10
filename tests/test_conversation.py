@@ -1,12 +1,10 @@
 """Tests for Hailo Ollama conversation entity."""
 
 import json
+import re
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
-
-from homeassistant.components import conversation
-from homeassistant.core import HomeAssistant
 
 from custom_components.hailo_ollama.const import (
     CONF_HOST,
@@ -116,7 +114,9 @@ async def test_call_non_streaming_success(mock_config_entry, mock_chat_response)
     mock_response.json = AsyncMock(return_value=mock_chat_response)
 
     mock_session = MagicMock()
-    mock_session.post = MagicMock(return_value=AsyncMock(__aenter__=AsyncMock(return_value=mock_response)))
+    mock_session.post = MagicMock(
+        return_value=AsyncMock(__aenter__=AsyncMock(return_value=mock_response))
+    )
 
     with patch(
         "custom_components.hailo_ollama.conversation.async_get_clientsession",
@@ -139,7 +139,9 @@ async def test_call_non_streaming_http_error(mock_config_entry):
     mock_response.text = AsyncMock(return_value="Internal Server Error")
 
     mock_session = MagicMock()
-    mock_session.post = MagicMock(return_value=AsyncMock(__aenter__=AsyncMock(return_value=mock_response)))
+    mock_session.post = MagicMock(
+        return_value=AsyncMock(__aenter__=AsyncMock(return_value=mock_response))
+    )
 
     with patch(
         "custom_components.hailo_ollama.conversation.async_get_clientsession",
@@ -163,7 +165,9 @@ async def test_call_non_streaming_empty_response(mock_config_entry):
     mock_response.json = AsyncMock(return_value={"message": {}})
 
     mock_session = MagicMock()
-    mock_session.post = MagicMock(return_value=AsyncMock(__aenter__=AsyncMock(return_value=mock_response)))
+    mock_session.post = MagicMock(
+        return_value=AsyncMock(__aenter__=AsyncMock(return_value=mock_response))
+    )
 
     with patch(
         "custom_components.hailo_ollama.conversation.async_get_clientsession",
@@ -174,3 +178,29 @@ async def test_call_non_streaming_empty_response(mock_config_entry):
             await entity._call_non_streaming(messages)
 
     assert "No content in response" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_call_non_streaming_connection_error(mock_config_entry):
+    """Test non-streaming API call with connection error."""
+    import aiohttp
+
+    entity = HailoOllamaConversationEntity(mock_config_entry)
+    entity.hass = MagicMock()
+
+    mock_session = MagicMock()
+    mock_session.post = MagicMock(
+        return_value=AsyncMock(
+            __aenter__=AsyncMock(side_effect=aiohttp.ClientConnectorError(MagicMock(), OSError("Connection refused")))
+        )
+    )
+
+    with patch(
+        "custom_components.hailo_ollama.conversation.async_get_clientsession",
+        return_value=mock_session,
+    ):
+        messages = [{"role": "user", "content": "Hello"}]
+        with pytest.raises(HailoError) as exc_info:
+            await entity._call_non_streaming(messages)
+
+    assert "Cannot connect" in str(exc_info.value)

@@ -1,36 +1,41 @@
 """Fixtures for Hailo Ollama tests."""
 
-from unittest.mock import AsyncMock, patch
+import sys
+from unittest.mock import MagicMock
 
 import pytest
 
-from homeassistant.core import HomeAssistant
-from homeassistant.setup import async_setup_component
+
+# Create a proper base class for ConversationEntity
+class MockConversationEntity:
+    """Mock base class for ConversationEntity."""
+    _attr_has_entity_name = True
+    _attr_name = None
+    _attr_unique_id = None
+
+    @property
+    def hass(self):
+        return getattr(self, "_hass", None)
+
+    @hass.setter
+    def hass(self, value):
+        self._hass = value
 
 
-@pytest.fixture
-def mock_api_version():
-    """Mock successful /api/version response."""
-    with patch(
-        "aiohttp.ClientSession.get",
-        new_callable=AsyncMock,
-    ) as mock_get:
-        mock_response = AsyncMock()
-        mock_response.status = 200
-        mock_response.json = AsyncMock(return_value={"version": "1.0.0"})
-        mock_get.return_value.__aenter__.return_value = mock_response
-        yield mock_get
+# Mock homeassistant modules before they're imported
+mock_conversation = MagicMock()
+mock_conversation.ConversationEntity = MockConversationEntity
+mock_conversation.ConversationInput = MagicMock
+mock_conversation.ConversationResult = MagicMock
+mock_conversation.ChatMessage = MagicMock
+mock_conversation.AssistantContent = MagicMock
+mock_conversation.IntentResponseType = MagicMock
 
+mock_entity_platform = MagicMock()
+mock_entity_platform.AddConfigEntryEntitiesCallback = MagicMock
 
-@pytest.fixture
-def mock_api_tags():
-    """Mock successful /api/tags response."""
-    return {
-        "models": [
-            {"name": "llama3.2:3b"},
-            {"name": "deepseek-r1:1.5b"},
-        ]
-    }
+sys.modules["homeassistant.components.conversation"] = mock_conversation
+sys.modules["homeassistant.helpers.entity_platform"] = mock_entity_platform
 
 
 @pytest.fixture
