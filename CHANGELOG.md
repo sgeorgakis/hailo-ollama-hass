@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.4](https://github.com/sgeorgakis/hailo-ollama-hass/compare/v0.1.3...v0.1.4) (2026-03-11)
+
+
+### Bug Fixes
+
+* resize icon to 256x256 ([46b1e34](https://github.com/sgeorgakis/hailo-ollama-hass/commit/46b1e342f3acad68aec982399ebc3519873fe9a2))
+
 ## [0.1.3](https://github.com/sgeorgakis/hailo-ollama-hass/compare/v0.1.2...v0.1.3) (2026-03-11)
 
 
