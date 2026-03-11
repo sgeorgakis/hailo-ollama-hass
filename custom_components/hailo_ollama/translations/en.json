@@ -20,7 +20,7 @@
         },
         "data_description": {
           "streaming": "Enable for token-by-token streaming. Disable for a single response (simpler but you wait for the full reply).",
-          "show_thinking": "When enabled, reasoning inside <think> tags will be included in the response. Disable to return only the final answer."
+          "show_thinking": "When enabled, reasoning inside &lt;think&gt; tags will be included in the response. Disable to return only the final answer."
         }
       }
     },
@@ -42,7 +42,7 @@
         },
         "data_description": {
           "streaming": "Enable for token-by-token streaming. Disable for a single response (simpler but you wait for the full reply).",
-          "show_thinking": "When enabled, reasoning inside <think> tags will be included in the response. Disable to return only the final answer."
+          "show_thinking": "When enabled, reasoning inside &lt;think&gt; tags will be included in the response. Disable to return only the final answer."
         }
       }
     }

@@ -20,7 +20,7 @@
         },
         "data_description": {
           "streaming": "Attiva per ricevere i token in modo progressivo. Disattiva per ricevere un'unica risposta completa (più semplice, ma dovrai attendere la risposta intera).",
-          "show_thinking": "Se attivato, il ragionamento all'interno dei tag <think> verrà incluso nella risposta. Disattiva per restituire solo la risposta finale."
+          "show_thinking": "Se attivato, il ragionamento all'interno dei tag &lt;think&gt; verrà incluso nella risposta. Disattiva per restituire solo la risposta finale."
         }
       }
     },
@@ -42,7 +42,7 @@
         },
         "data_description": {
           "streaming": "Attiva per ricevere i token in modo progressivo. Disattiva per ricevere un'unica risposta completa (più semplice, ma dovrai attendere la risposta intera).",
-          "show_thinking": "Se attivato, il ragionamento all'interno dei tag <think> verrà incluso nella risposta. Disattiva per restituire solo la risposta finale."
+          "show_thinking": "Se attivato, il ragionamento all'interno dei tag &lt;think&gt; verrà incluso nella risposta. Disattiva per restituire solo la risposta finale."
         }
       }
     }

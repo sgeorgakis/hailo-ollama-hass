@@ -20,7 +20,7 @@
         },
         "data_description": {
           "streaming": "Aktivieren für Token-für-Token-Streaming. Deaktivieren für eine einzelne Antwort (einfacher, aber Sie warten auf die vollständige Antwort).",
-          "show_thinking": "Wenn aktiviert, wird der Denkprozess innerhalb von <think>-Tags in der Antwort angezeigt. Deaktivieren, um nur die endgültige Antwort zurückzugeben."
+          "show_thinking": "Wenn aktiviert, wird der Denkprozess innerhalb von &lt;think&gt;-Tags in der Antwort angezeigt. Deaktivieren, um nur die endgültige Antwort zurückzugeben."
         }
       }
     },
@@ -42,7 +42,7 @@
         },
         "data_description": {
           "streaming": "Aktivieren für Token-für-Token-Streaming. Deaktivieren für eine einzelne Antwort (einfacher, aber Sie warten auf die vollständige Antwort).",
-          "show_thinking": "Wenn aktiviert, wird der Denkprozess innerhalb von <think>-Tags in der Antwort angezeigt. Deaktivieren, um nur die endgültige Antwort zurückzugeben."
+          "show_thinking": "Wenn aktiviert, wird der Denkprozess innerhalb von &lt;think&gt;-Tags in der Antwort angezeigt. Deaktivieren, um nur die endgültige Antwort zurückzugeben."
         }
       }
     }
