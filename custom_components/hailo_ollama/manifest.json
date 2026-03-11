@@ -1,12 +1,16 @@
 {
   "domain": "hailo_ollama",
   "name": "Hailo Ollama",
-  "version": "0.1.2",
-  "codeowners": ["@sgeorgakis"],
+  "version": "0.1.3",
+  "codeowners": [
+    "@sgeorgakis"
+  ],
   "config_flow": true,
   "iot_class": "local_polling",
   "integration_type": "service",
   "requirements": [],
-  "dependencies": ["conversation"],
+  "dependencies": [
+    "conversation"
+  ],
   "homeassistant": "2025.1.0"
 }
