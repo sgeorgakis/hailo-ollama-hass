@@ -1,0 +1,14 @@
+{
+  "packages": {
+    ".": {
+      "release-type": "simple",
+      "extra-files": [
+        {
+          "type": "json",
+          "path": "custom_components/hailo_ollama/manifest.json",
+          "jsonpath": "$.version"
+        }
+      ]
+    }
+  }
+}
