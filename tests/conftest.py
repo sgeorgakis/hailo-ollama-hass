@@ -35,6 +35,33 @@ sys.modules["homeassistant.components.conversation"] = mock_conversation
 sys.modules["homeassistant.helpers.entity_platform"] = mock_entity_platform
 
 
+class MockAITaskEntity:
+    """Mock base class for AITaskEntity."""
+
+    _attr_has_entity_name = True
+    _attr_name = None
+    _attr_unique_id = None
+    _attr_supported_tasks = MagicMock()
+
+    @property
+    def hass(self):
+        return getattr(self, "_hass", None)
+
+    @hass.setter
+    def hass(self, value):
+        self._hass = value
+
+
+mock_ai_task = MagicMock()
+mock_ai_task.AITaskEntity = MockAITaskEntity
+mock_ai_task.AITaskEntityFeature = MagicMock()
+mock_ai_task.AITaskEntityFeature.GENERATE_DATA = MagicMock()
+mock_ai_task.GenDataTask = MagicMock
+mock_ai_task.RunDataTaskResult = MagicMock
+
+sys.modules["homeassistant.components.ai_task"] = mock_ai_task
+
+
 @pytest.fixture
 def mock_chat_response():
     """Mock successful /api/chat response."""

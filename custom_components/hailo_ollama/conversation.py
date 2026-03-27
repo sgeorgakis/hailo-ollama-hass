@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import base64
 import json
 import logging
 import time
@@ -24,10 +25,12 @@ from .const import (
     CONF_SHOW_THINKING,
     CONF_STREAMING,
     CONF_SYSTEM_PROMPT,
+    CONF_VISION_MODEL,
     DEFAULT_SHOW_THINKING,
     DEFAULT_STREAMING,
     DEFAULT_SYSTEM_PROMPT,
     DEFAULT_TIMEOUT,
+    DEFAULT_VISION_MODEL,
     DOMAIN,
 )
 
@@ -66,107 +69,19 @@ async def async_setup_entry(
     async_add_entities([HailoOllamaConversationEntity(entry)])
 
 
-class HailoOllamaConversationEntity(conversation.ConversationEntity):
-    """Hailo Ollama conversation agent."""
+class HailoOllamaClientMixin:
+    """Mixin that provides HTTP client methods for communicating with Hailo-Ollama.
 
-    _attr_has_entity_name = True
-    _attr_name = None
-
-    def __init__(self, entry: ConfigEntry) -> None:
-        """Initialize."""
-        self._entry = entry
-        # Host and port are only set during initial config, never in options
-        self._host: str = entry.data[CONF_HOST]
-        self._port: int = entry.data[CONF_PORT]
-        # Remaining settings may be overridden via the options flow
-        opts = entry.options or {}
-        self._model: str = opts.get(CONF_MODEL) or entry.data[CONF_MODEL]
-        self._system_prompt: str = opts.get(CONF_SYSTEM_PROMPT) or entry.data.get(
-            CONF_SYSTEM_PROMPT, DEFAULT_SYSTEM_PROMPT
-        )
-        self._streaming: bool = opts.get(CONF_STREAMING, entry.data.get(CONF_STREAMING, DEFAULT_STREAMING))
-        self._show_thinking: bool = opts.get(CONF_SHOW_THINKING, entry.data.get(CONF_SHOW_THINKING, DEFAULT_SHOW_THINKING))
-        self._attr_unique_id = entry.entry_id
-        self._base_url = f"http://{self._host}:{self._port}"
-        self._conversations: dict[str, list[dict[str, str]]] = {}
-
-    @property
-    def supported_languages(self) -> list[str]:
-        """Return supported languages."""
-        return ["en"]
-
-    @property
-    def device_info(self) -> dict[str, Any]:
-        """Return device info."""
-        return {
-            "identifiers": {(DOMAIN, self._entry.entry_id)},
-            "name": f"Hailo Ollama ({self._model})",
-            "manufacturer": "Hailo",
-            "model": self._model,
-        }
-
-    async def async_process(
-        self,
-        user_input: conversation.ConversationInput,
-    ) -> conversation.ConversationResult:
-        """Process a conversation turn."""
-        t0 = time.monotonic()
-        user_text = user_input.text
-        _LOGGER.debug("User: %s", user_text)
-
-        conversation_id = user_input.conversation_id or str(uuid.uuid4())
-        history = self._conversations.get(conversation_id, [])
-
-        # Build messages: system prompt + history + new user message
-        messages: list[dict[str, str]] = [
-            {"role": "system", "content": self._system_prompt},
-        ]
-        messages.extend(history)
-        messages.append({"role": "user", "content": user_text})
-
-        # Call Hailo with configured mode
-        try:
-            if self._streaming:
-                response_text = await self._call_streaming(messages)
-            else:
-                response_text = await self._call_non_streaming(messages)
-        except HailoError as err:
-            _LOGGER.error("Hailo error: %s", err)
-            response_text = f"Sorry, I encountered an error: {err}"
-
-        elapsed = time.monotonic() - t0
-
-        clean_text = _process_thinking(response_text, self._show_thinking)
-        if clean_text != response_text.strip():
-            _LOGGER.debug(
-                "Processed <think> tags: %d → %d chars",
-                len(response_text),
-                len(clean_text),
-            )
-
-        _LOGGER.info(
-            "Hailo responded in %.1fs (%d chars): %.100s",
-            elapsed,
-            len(clean_text),
-            clean_text,
-        )
-
-        # Update conversation history
-        updated_history = list(history)
-        updated_history.append({"role": "user", "content": user_text})
-        updated_history.append({"role": "assistant", "content": clean_text})
-        self._conversations[conversation_id] = updated_history
-
-        response = intent.IntentResponse(language=user_input.language)
-        response.async_set_speech(clean_text)
-
-        return conversation.ConversationResult(
-            response=response,
-            conversation_id=conversation_id,
-        )
+    Subclasses must expose:
+      - self._base_url: str
+      - self._model: str
+      - self._host: str
+      - self._port: int
+      - self.hass: HomeAssistant
+    """
 
     def _build_payload(
-        self, messages: list[dict[str, str]], stream: bool
+        self, messages: list[dict[str, Any]], stream: bool
     ) -> dict:
         """Build the minimal /api/chat payload."""
         return {
@@ -176,7 +91,7 @@ class HailoOllamaConversationEntity(conversation.ConversationEntity):
         }
 
     async def _call_non_streaming(
-        self, messages: list[dict[str, str]]
+        self, messages: list[dict[str, Any]]
     ) -> str:
         """Call /api/chat with stream:false — single JSON response."""
         url = f"{self._base_url}/api/chat"
@@ -231,7 +146,7 @@ class HailoOllamaConversationEntity(conversation.ConversationEntity):
         return content
 
     async def _call_streaming(
-        self, messages: list[dict[str, str]]
+        self, messages: list[dict[str, Any]]
     ) -> str:
         """Call /api/chat with stream:true — collect ndjson chunks."""
         url = f"{self._base_url}/api/chat"
@@ -301,7 +216,7 @@ class HailoOllamaConversationEntity(conversation.ConversationEntity):
         if not chunks:
             raise HailoError("Streaming returned 0 chunks")
 
-        # Last done=true chunk has full content
+        # Last done=true chunk has full content on some server versions
         last = chunks[-1]
         if last.get("done") and last.get("message", {}).get("content"):
             return last["message"]["content"]
@@ -318,6 +233,142 @@ class HailoOllamaConversationEntity(conversation.ConversationEntity):
             )
 
         return full
+
+
+class HailoOllamaConversationEntity(
+    conversation.ConversationEntity, HailoOllamaClientMixin
+):
+    """Hailo Ollama conversation agent."""
+
+    _attr_has_entity_name = True
+    _attr_name = None
+
+    def __init__(self, entry: ConfigEntry) -> None:
+        """Initialize."""
+        self._entry = entry
+        # Host and port are only set during initial config, never in options
+        self._host: str = entry.data[CONF_HOST]
+        self._port: int = entry.data[CONF_PORT]
+        # Remaining settings may be overridden via the options flow
+        opts = entry.options or {}
+        self._model: str = opts.get(CONF_MODEL) or entry.data[CONF_MODEL]
+        self._system_prompt: str = opts.get(CONF_SYSTEM_PROMPT) or entry.data.get(
+            CONF_SYSTEM_PROMPT, DEFAULT_SYSTEM_PROMPT
+        )
+        self._streaming: bool = opts.get(
+            CONF_STREAMING, entry.data.get(CONF_STREAMING, DEFAULT_STREAMING)
+        )
+        self._show_thinking: bool = opts.get(
+            CONF_SHOW_THINKING, entry.data.get(CONF_SHOW_THINKING, DEFAULT_SHOW_THINKING)
+        )
+        self._vision_model: bool = opts.get(
+            CONF_VISION_MODEL, entry.data.get(CONF_VISION_MODEL, DEFAULT_VISION_MODEL)
+        )
+        self._attr_unique_id = entry.entry_id
+        self._base_url = f"http://{self._host}:{self._port}"
+        self._conversations: dict[str, list[dict[str, Any]]] = {}
+
+    @property
+    def supported_languages(self) -> list[str]:
+        """Return supported languages."""
+        return ["en"]
+
+    @property
+    def device_info(self) -> dict[str, Any]:
+        """Return device info."""
+        return {
+            "identifiers": {(DOMAIN, self._entry.entry_id)},
+            "name": f"Hailo Ollama ({self._model})",
+            "manufacturer": "Hailo",
+            "model": self._model,
+        }
+
+    def _build_user_message(
+        self, text: str, attachments: list | None
+    ) -> dict[str, Any]:
+        """Build the user message dict, encoding image attachments when applicable."""
+        if not (self._vision_model and attachments):
+            return {"role": "user", "content": text}
+
+        images: list[str] = []
+        for attachment in attachments:
+            raw = getattr(attachment, "content", None)
+            if raw is None and isinstance(attachment, (bytes, bytearray)):
+                raw = attachment
+            if isinstance(raw, (bytes, bytearray)):
+                images.append(base64.b64encode(raw).decode("ascii"))
+            else:
+                _LOGGER.warning(
+                    "Skipping attachment with unreadable content: %s",
+                    type(attachment),
+                )
+
+        if images:
+            return {"role": "user", "content": text, "images": images}
+        return {"role": "user", "content": text}
+
+    async def async_process(
+        self,
+        user_input: conversation.ConversationInput,
+    ) -> conversation.ConversationResult:
+        """Process a conversation turn."""
+        t0 = time.monotonic()
+        user_text = user_input.text
+        _LOGGER.debug("User: %s", user_text)
+
+        conversation_id = user_input.conversation_id or str(uuid.uuid4())
+        history = self._conversations.get(conversation_id, [])
+
+        attachments = getattr(user_input, "attachments", None)
+        user_message = self._build_user_message(user_text, attachments)
+
+        # Build messages: system prompt + history + new user message
+        messages: list[dict[str, Any]] = [
+            {"role": "system", "content": self._system_prompt},
+        ]
+        messages.extend(history)
+        messages.append(user_message)
+
+        # Call Hailo with configured mode
+        try:
+            if self._streaming:
+                response_text = await self._call_streaming(messages)
+            else:
+                response_text = await self._call_non_streaming(messages)
+        except HailoError as err:
+            _LOGGER.error("Hailo error: %s", err)
+            response_text = f"Sorry, I encountered an error: {err}"
+
+        elapsed = time.monotonic() - t0
+
+        clean_text = _process_thinking(response_text, self._show_thinking)
+        if clean_text != response_text.strip():
+            _LOGGER.debug(
+                "Processed <think> tags: %d → %d chars",
+                len(response_text),
+                len(clean_text),
+            )
+
+        _LOGGER.info(
+            "Hailo responded in %.1fs (%d chars): %.100s",
+            elapsed,
+            len(clean_text),
+            clean_text,
+        )
+
+        # Store plain text in history regardless of how the message was sent
+        updated_history = list(history)
+        updated_history.append({"role": "user", "content": user_text})
+        updated_history.append({"role": "assistant", "content": clean_text})
+        self._conversations[conversation_id] = updated_history
+
+        response = intent.IntentResponse(language=user_input.language)
+        response.async_set_speech(clean_text)
+
+        return conversation.ConversationResult(
+            response=response,
+            conversation_id=conversation_id,
+        )
 
 
 class HailoError(Exception):
