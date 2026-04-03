@@ -4,6 +4,11 @@ version = "0.1.0"
 description = "Home Assistant integration for Hailo Ollama"
 requires-python = ">=3.12"
 
+[project.optional-dependencies]
+dev = [
+    "pytest-homeassistant-custom-component",
+]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 asyncio_mode = "auto"

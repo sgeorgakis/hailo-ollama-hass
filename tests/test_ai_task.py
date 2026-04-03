@@ -180,7 +180,7 @@ async def test_generate_data_non_streaming_success():
     messages_sent = entity._call_non_streaming.call_args[0][0]
     assert messages_sent[0]["role"] == "system"
     assert messages_sent[1] == {"role": "user", "content": "Write a poem about smart homes."}
-    # RunDataTaskResult is the mock from conftest, just verify it was constructed
+    # GenDataTaskResult is the mock from conftest, just verify it was constructed
     assert result is not None
 
 
@@ -235,7 +235,7 @@ async def test_generate_data_hailo_error_returns_error_message():
     task.instructions = "Do something."
 
     mock_result_cls = MagicMock()
-    with patch("custom_components.hailo_ollama.ai_task.RunDataTaskResult", mock_result_cls):
+    with patch("custom_components.hailo_ollama.ai_task.GenDataTaskResult", mock_result_cls):
         # Should not raise — error is caught and embedded in the result
         result = await entity._async_generate_data(task)
 
@@ -269,7 +269,7 @@ async def test_generate_data_strips_thinking_tags():
     task.instructions = "Answer this."
 
     mock_result_cls = MagicMock()
-    with patch("custom_components.hailo_ollama.ai_task.RunDataTaskResult", mock_result_cls):
+    with patch("custom_components.hailo_ollama.ai_task.GenDataTaskResult", mock_result_cls):
         await entity._async_generate_data(task)
 
     mock_result_cls.assert_called_once()

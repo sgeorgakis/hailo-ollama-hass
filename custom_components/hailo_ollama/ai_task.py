@@ -9,7 +9,7 @@ from homeassistant.components.ai_task import (
     AITaskEntity,
     AITaskEntityFeature,
     GenDataTask,
-    RunDataTaskResult,
+    GenDataTaskResult,
 )
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
@@ -86,7 +86,7 @@ class HailoAITaskEntity(AITaskEntity, HailoOllamaClientMixin):
         self,
         task: GenDataTask,
         chat_log=None,
-    ) -> RunDataTaskResult:
+    ) -> GenDataTaskResult:
         """Execute a data generation task against the Hailo-Ollama API."""
         messages = [
             {"role": "system", "content": self._system_prompt},
@@ -100,7 +100,7 @@ class HailoAITaskEntity(AITaskEntity, HailoOllamaClientMixin):
                 response_text = await self._call_non_streaming(messages)
         except HailoError as err:
             _LOGGER.error("Hailo AI task error: %s", err)
-            return RunDataTaskResult(data=f"Sorry, I encountered an error: {err}")
+            return GenDataTaskResult(data=f"Sorry, I encountered an error: {err}")
 
         clean_text = _process_thinking(response_text, self._show_thinking)
-        return RunDataTaskResult(data=clean_text)
+        return GenDataTaskResult(data=clean_text)
