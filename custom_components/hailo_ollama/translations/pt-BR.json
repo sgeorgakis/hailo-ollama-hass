@@ -16,11 +16,13 @@
           "model": "Modelo",
           "system_prompt": "Instrução do sistema",
           "streaming": "Usar respostas em streaming",
-          "show_thinking": "Mostrar processo de raciocínio"
+          "show_thinking": "Mostrar processo de raciocínio",
+          "vision_model": "Modelo de visão"
         },
         "data_description": {
           "streaming": "Ative para receber tokens de forma progressiva. Desative para receber uma única resposta completa (mais simples, mas você precisará aguardar a resposta inteira).",
-          "show_thinking": "Quando ativado, o raciocínio dentro das tags &lt;think&gt; será incluído na resposta. Desative para retornar apenas a resposta final."
+          "show_thinking": "Quando ativado, o raciocínio dentro das tags &lt;think&gt; será incluído na resposta. Desative para retornar apenas a resposta final.",
+          "vision_model": "Ative se o seu modelo suportar entradas de imagem (ex. llava). Permite anexar imagens às mensagens de conversa."
         }
       }
     },
@@ -38,11 +40,13 @@
           "model": "Modelo",
           "system_prompt": "Instrução do sistema",
           "streaming": "Usar respostas em streaming",
-          "show_thinking": "Mostrar processo de raciocínio"
+          "show_thinking": "Mostrar processo de raciocínio",
+          "vision_model": "Modelo de visão"
         },
         "data_description": {
           "streaming": "Ative para receber tokens de forma progressiva. Desative para receber uma única resposta completa (mais simples, mas você precisará aguardar a resposta inteira).",
-          "show_thinking": "Quando ativado, o raciocínio dentro das tags &lt;think&gt; será incluído na resposta. Desative para retornar apenas a resposta final."
+          "show_thinking": "Quando ativado, o raciocínio dentro das tags &lt;think&gt; será incluído na resposta. Desative para retornar apenas a resposta final.",
+          "vision_model": "Ative se o seu modelo suportar entradas de imagem (ex. llava). Permite anexar imagens às mensagens de conversa."
         }
       }
     }

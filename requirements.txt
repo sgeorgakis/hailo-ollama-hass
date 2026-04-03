@@ -1,0 +1,3 @@
+# Runtime dependencies
+# This integration has no external runtime dependencies.
+# It uses only libraries bundled with Home Assistant (aiohttp, voluptuous).

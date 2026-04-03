@@ -8,7 +8,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 
-PLATFORMS = [Platform.CONVERSATION, "ai_task"]
+PLATFORMS = [Platform.CONVERSATION, Platform.AI_TASK]
 
 _LOGGER = logging.getLogger(__name__)
 

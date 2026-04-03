@@ -16,11 +16,13 @@
           "model": "Modell",
           "system_prompt": "Systemaufforderung",
           "streaming": "Streaming-Antworten verwenden",
-          "show_thinking": "Denkprozess anzeigen"
+          "show_thinking": "Denkprozess anzeigen",
+          "vision_model": "Vision-Modell"
         },
         "data_description": {
           "streaming": "Aktivieren für Token-für-Token-Streaming. Deaktivieren für eine einzelne Antwort (einfacher, aber Sie warten auf die vollständige Antwort).",
-          "show_thinking": "Wenn aktiviert, wird der Denkprozess innerhalb von &lt;think&gt;-Tags in der Antwort angezeigt. Deaktivieren, um nur die endgültige Antwort zurückzugeben."
+          "show_thinking": "Wenn aktiviert, wird der Denkprozess innerhalb von &lt;think&gt;-Tags in der Antwort angezeigt. Deaktivieren, um nur die endgültige Antwort zurückzugeben.",
+          "vision_model": "Aktivieren, wenn Ihr Modell Bildeingaben unterstützt (z.B. llava). Ermöglicht das Anhängen von Bildern an Konversationsnachrichten."
         }
       }
     },
@@ -38,11 +40,13 @@
           "model": "Modell",
           "system_prompt": "Systemaufforderung",
           "streaming": "Streaming-Antworten verwenden",
-          "show_thinking": "Denkprozess anzeigen"
+          "show_thinking": "Denkprozess anzeigen",
+          "vision_model": "Vision-Modell"
         },
         "data_description": {
           "streaming": "Aktivieren für Token-für-Token-Streaming. Deaktivieren für eine einzelne Antwort (einfacher, aber Sie warten auf die vollständige Antwort).",
-          "show_thinking": "Wenn aktiviert, wird der Denkprozess innerhalb von &lt;think&gt;-Tags in der Antwort angezeigt. Deaktivieren, um nur die endgültige Antwort zurückzugeben."
+          "show_thinking": "Wenn aktiviert, wird der Denkprozess innerhalb von &lt;think&gt;-Tags in der Antwort angezeigt. Deaktivieren, um nur die endgültige Antwort zurückzugeben.",
+          "vision_model": "Aktivieren, wenn Ihr Modell Bildeingaben unterstützt (z.B. llava). Ermöglicht das Anhängen von Bildern an Konversationsnachrichten."
         }
       }
     }

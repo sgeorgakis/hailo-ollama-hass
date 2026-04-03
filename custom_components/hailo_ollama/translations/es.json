@@ -16,11 +16,13 @@
           "model": "Modelo",
           "system_prompt": "Instrucción del sistema",
           "streaming": "Usar respuestas en streaming",
-          "show_thinking": "Mostrar proceso de razonamiento"
+          "show_thinking": "Mostrar proceso de razonamiento",
+          "vision_model": "Modelo de visión"
         },
         "data_description": {
           "streaming": "Activa para recibir tokens de forma progresiva. Desactiva para recibir una única respuesta completa (más sencillo, pero tendrás que esperar hasta el final).",
-          "show_thinking": "Cuando está activado, el razonamiento dentro de las etiquetas &lt;think&gt; se incluirá en la respuesta. Desactiva para devolver solo la respuesta final."
+          "show_thinking": "Cuando está activado, el razonamiento dentro de las etiquetas &lt;think&gt; se incluirá en la respuesta. Desactiva para devolver solo la respuesta final.",
+          "vision_model": "Activa si tu modelo admite entradas de imagen (p. ej. llava). Permite adjuntar imágenes a los mensajes de conversación."
         }
       }
     },
@@ -38,11 +40,13 @@
           "model": "Modelo",
           "system_prompt": "Instrucción del sistema",
           "streaming": "Usar respuestas en streaming",
-          "show_thinking": "Mostrar proceso de razonamiento"
+          "show_thinking": "Mostrar proceso de razonamiento",
+          "vision_model": "Modelo de visión"
         },
         "data_description": {
           "streaming": "Activa para recibir tokens de forma progresiva. Desactiva para recibir una única respuesta completa (más sencillo, pero tendrás que esperar hasta el final).",
-          "show_thinking": "Cuando está activado, el razonamiento dentro de las etiquetas &lt;think&gt; se incluirá en la respuesta. Desactiva para devolver solo la respuesta final."
+          "show_thinking": "Cuando está activado, el razonamiento dentro de las etiquetas &lt;think&gt; se incluirá en la respuesta. Desactiva para devolver solo la respuesta final.",
+          "vision_model": "Activa si tu modelo admite entradas de imagen (p. ej. llava). Permite adjuntar imágenes a los mensajes de conversación."
         }
       }
     }

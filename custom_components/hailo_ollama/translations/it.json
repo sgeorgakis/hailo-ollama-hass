@@ -16,11 +16,13 @@
           "model": "Modello",
           "system_prompt": "Istruzione di sistema",
           "streaming": "Usa risposte in streaming",
-          "show_thinking": "Mostra il processo di ragionamento"
+          "show_thinking": "Mostra il processo di ragionamento",
+          "vision_model": "Modello visione"
         },
         "data_description": {
           "streaming": "Attiva per ricevere i token in modo progressivo. Disattiva per ricevere un'unica risposta completa (più semplice, ma dovrai attendere la risposta intera).",
-          "show_thinking": "Se attivato, il ragionamento all'interno dei tag &lt;think&gt; verrà incluso nella risposta. Disattiva per restituire solo la risposta finale."
+          "show_thinking": "Se attivato, il ragionamento all'interno dei tag &lt;think&gt; verrà incluso nella risposta. Disattiva per restituire solo la risposta finale.",
+          "vision_model": "Attiva se il tuo modello supporta input di immagini (es. llava). Consente di allegare immagini ai messaggi di conversazione."
         }
       }
     },
@@ -38,11 +40,13 @@
           "model": "Modello",
           "system_prompt": "Istruzione di sistema",
           "streaming": "Usa risposte in streaming",
-          "show_thinking": "Mostra il processo di ragionamento"
+          "show_thinking": "Mostra il processo di ragionamento",
+          "vision_model": "Modello visione"
         },
         "data_description": {
           "streaming": "Attiva per ricevere i token in modo progressivo. Disattiva per ricevere un'unica risposta completa (più semplice, ma dovrai attendere la risposta intera).",
-          "show_thinking": "Se attivato, il ragionamento all'interno dei tag &lt;think&gt; verrà incluso nella risposta. Disattiva per restituire solo la risposta finale."
+          "show_thinking": "Se attivato, il ragionamento all'interno dei tag &lt;think&gt; verrà incluso nella risposta. Disattiva per restituire solo la risposta finale.",
+          "vision_model": "Attiva se il tuo modello supporta input di immagini (es. llava). Consente di allegare immagini ai messaggi di conversazione."
         }
       }
     }
