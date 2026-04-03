@@ -4,12 +4,17 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from custom_components.hailo_ollama import PLATFORMS, async_setup_entry, async_unload_entry
+from custom_components.hailo_ollama import (
+    PLATFORMS,
+    _async_update_listener,
+    async_setup_entry,
+    async_unload_entry,
+)
 
 
 @pytest.mark.asyncio
 async def test_async_setup_entry():
-    """Test async_setup_entry forwards to PLATFORMS and returns True."""
+    """Test async_setup_entry forwards to PLATFORMS, registers an update listener, and returns True."""
     hass = MagicMock()
     hass.config_entries.async_forward_entry_setups = AsyncMock(return_value=None)
     entry = MagicMock()
@@ -19,6 +24,21 @@ async def test_async_setup_entry():
 
     assert result is True
     hass.config_entries.async_forward_entry_setups.assert_called_once_with(entry, PLATFORMS)
+    entry.add_update_listener.assert_called_once_with(_async_update_listener)
+    entry.async_on_unload.assert_called_once()
+
+
+@pytest.mark.asyncio
+async def test_async_update_listener_reloads_entry():
+    """_async_update_listener triggers a config entry reload."""
+    hass = MagicMock()
+    hass.config_entries.async_reload = AsyncMock()
+    entry = MagicMock()
+    entry.entry_id = "test_entry_id"
+
+    await _async_update_listener(hass, entry)
+
+    hass.config_entries.async_reload.assert_called_once_with(entry.entry_id)
 
 
 @pytest.mark.asyncio
