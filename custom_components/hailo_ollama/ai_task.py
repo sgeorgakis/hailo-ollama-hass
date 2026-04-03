@@ -49,7 +49,7 @@ class HailoAITaskEntity(AITaskEntity, HailoOllamaClientMixin):
 
     _attr_has_entity_name = True
     _attr_name = None
-    _attr_supported_tasks = AITaskEntityFeature.GENERATE_DATA
+    _attr_supported_features = AITaskEntityFeature.GENERATE_DATA
 
     def __init__(self, entry: ConfigEntry) -> None:
         """Initialize."""
