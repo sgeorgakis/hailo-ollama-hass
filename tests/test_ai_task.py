@@ -53,6 +53,13 @@ def _make_entity(config_entry_data: dict) -> HailoAITaskEntity:
     return entity
 
 
+def _make_chat_log(conversation_id: str = "test-conv-id") -> MagicMock:
+    """Build a mock ChatLog."""
+    chat_log = MagicMock()
+    chat_log.conversation_id = conversation_id
+    return chat_log
+
+
 # ---------------------------------------------------------------------------
 # async_setup_entry
 # ---------------------------------------------------------------------------
@@ -173,14 +180,14 @@ async def test_generate_data_non_streaming_success():
 
     task = MagicMock()
     task.instructions = "Write a poem about smart homes."
+    chat_log = _make_chat_log()
 
-    result = await entity._async_generate_data(task)
+    result = await entity._async_generate_data(task, chat_log)
 
     entity._call_non_streaming.assert_called_once()
     messages_sent = entity._call_non_streaming.call_args[0][0]
     assert messages_sent[0]["role"] == "system"
     assert messages_sent[1] == {"role": "user", "content": "Write a poem about smart homes."}
-    # GenDataTaskResult is the mock from conftest, just verify it was constructed
     assert result is not None
 
 
@@ -203,8 +210,9 @@ async def test_generate_data_streaming_success():
 
     task = MagicMock()
     task.instructions = "Summarise today's weather."
+    chat_log = _make_chat_log()
 
-    result = await entity._async_generate_data(task)
+    result = await entity._async_generate_data(task, chat_log)
 
     entity._call_streaming.assert_called_once()
     messages_sent = entity._call_streaming.call_args[0][0]
@@ -213,13 +221,39 @@ async def test_generate_data_streaming_success():
 
 
 # ---------------------------------------------------------------------------
-# _async_generate_data — HailoError returns error message
+# _async_generate_data — conversation_id is propagated from chat_log
 # ---------------------------------------------------------------------------
 
 
 @pytest.mark.asyncio
-async def test_generate_data_hailo_error_returns_error_message():
-    """When HailoError is raised, _async_generate_data returns a result without re-raising."""
+async def test_generate_data_uses_chat_log_conversation_id():
+    """GenDataTaskResult receives the conversation_id from the chat_log."""
+    entity = _make_entity({
+        CONF_HOST: "localhost",
+        CONF_PORT: 8000,
+        CONF_MODEL: "llama3.2:3b",
+        CONF_SYSTEM_PROMPT: DEFAULT_SYSTEM_PROMPT,
+        CONF_STREAMING: False,
+    })
+    entity._call_non_streaming = AsyncMock(return_value="Answer.")
+    chat_log = _make_chat_log("my-specific-conv-id")
+
+    mock_result_cls = MagicMock()
+    with patch("custom_components.hailo_ollama.ai_task.GenDataTaskResult", mock_result_cls):
+        await entity._async_generate_data(MagicMock(instructions="Q"), chat_log)
+
+    call_kwargs = mock_result_cls.call_args.kwargs
+    assert call_kwargs["conversation_id"] == "my-specific-conv-id"
+
+
+# ---------------------------------------------------------------------------
+# _async_generate_data — HailoError re-raises
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.asyncio
+async def test_generate_data_hailo_error_reraises():
+    """When HailoError is raised, _async_generate_data re-raises it."""
     entity = _make_entity({
         CONF_HOST: "localhost",
         CONF_PORT: 8000,
@@ -234,16 +268,8 @@ async def test_generate_data_hailo_error_returns_error_message():
     task = MagicMock()
     task.instructions = "Do something."
 
-    mock_result_cls = MagicMock()
-    with patch("custom_components.hailo_ollama.ai_task.GenDataTaskResult", mock_result_cls):
-        # Should not raise — error is caught and embedded in the result
-        result = await entity._async_generate_data(task)
-
-    assert result is not None
-    mock_result_cls.assert_called_once()
-    call_kwargs = mock_result_cls.call_args
-    data_arg = call_kwargs.kwargs.get("data") or (call_kwargs.args[0] if call_kwargs.args else None)
-    assert "service unavailable" in data_arg
+    with pytest.raises(HailoError, match="service unavailable"):
+        await entity._async_generate_data(task, _make_chat_log())
 
 
 # ---------------------------------------------------------------------------
@@ -270,10 +296,9 @@ async def test_generate_data_strips_thinking_tags():
 
     mock_result_cls = MagicMock()
     with patch("custom_components.hailo_ollama.ai_task.GenDataTaskResult", mock_result_cls):
-        await entity._async_generate_data(task)
+        await entity._async_generate_data(task, _make_chat_log())
 
     mock_result_cls.assert_called_once()
-    call_kwargs = mock_result_cls.call_args
-    data_arg = call_kwargs.kwargs.get("data") or (call_kwargs.args[0] if call_kwargs.args else None)
-    assert data_arg == "The real answer."
-    assert "<think>" not in data_arg
+    call_kwargs = mock_result_cls.call_args.kwargs
+    assert call_kwargs["data"] == "The real answer."
+    assert "<think>" not in call_kwargs["data"]

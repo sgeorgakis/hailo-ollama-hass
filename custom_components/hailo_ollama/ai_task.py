@@ -5,6 +5,7 @@ from __future__ import annotations
 import logging
 from typing import Any
 
+from homeassistant.components import conversation
 from homeassistant.components.ai_task import (
     AITaskEntity,
     AITaskEntityFeature,
@@ -85,7 +86,7 @@ class HailoAITaskEntity(AITaskEntity, HailoOllamaClientMixin):
     async def _async_generate_data(
         self,
         task: GenDataTask,
-        chat_log=None,
+        chat_log: conversation.ChatLog,
     ) -> GenDataTaskResult:
         """Execute a data generation task against the Hailo-Ollama API."""
         messages = [
@@ -100,7 +101,10 @@ class HailoAITaskEntity(AITaskEntity, HailoOllamaClientMixin):
                 response_text = await self._call_non_streaming(messages)
         except HailoError as err:
             _LOGGER.error("Hailo AI task error: %s", err)
-            return GenDataTaskResult(data=f"Sorry, I encountered an error: {err}")
+            raise
 
         clean_text = _process_thinking(response_text, self._show_thinking)
-        return GenDataTaskResult(data=clean_text)
+        return GenDataTaskResult(
+            conversation_id=chat_log.conversation_id,
+            data=clean_text,
+        )
