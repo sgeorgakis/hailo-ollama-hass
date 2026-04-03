@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/sgeorgakis/hailo-ollama-hass/compare/v0.2.0...v0.2.1) (2026-04-03)
+
+
+### Bug Fixes
+
+* rename RunDataTaskResult to GenDataTaskResult to match HA api_task API ([9da5d54](https://github.com/sgeorgakis/hailo-ollama-hass/commit/9da5d540e2949b2605c60810f5fc2ae245e2ef55))
+
 ## [0.2.0](https://github.com/sgeorgakis/hailo-ollama-hass/compare/v0.1.4...v0.2.0) (2026-03-27)
 
 
