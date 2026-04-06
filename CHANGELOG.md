@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.3.0](https://github.com/sgeorgakis/hailo-ollama-hass/compare/v0.2.1...v0.3.0) (2026-04-06)
+
+
+### Features
+
+* add brand logo and dark mode icon assets ([b2a9915](https://github.com/sgeorgakis/hailo-ollama-hass/commit/b2a9915006e744b30c0e828832a1d0fecda3fe7f))
+* remove vision_model config option; attachments always processed ([241f10b](https://github.com/sgeorgakis/hailo-ollama-hass/commit/241f10b0bbe1d559e8c4cf02d57d8f52f73330bb))
+* support all languages in conversation agent ([1a78bfe](https://github.com/sgeorgakis/hailo-ollama-hass/commit/1a78bfea024a103b785277483818284bd554a308))
+
+
+### Bug Fixes
+
+* move icon to component root and require Python 3.13 ([a618426](https://github.com/sgeorgakis/hailo-ollama-hass/commit/a6184261ea01fd586ff2521b32855e72af36eed4))
+* use brand/ folder for icon and require HA 2026.3 ([6d1555e](https://github.com/sgeorgakis/hailo-ollama-hass/commit/6d1555ec05aa697cefa1f916f18236a4bc683d11))
+
 ## [0.2.2](https://github.com/sgeorgakis/hailo-ollama-hass/compare/v0.2.1...v0.2.2) (2026-04-06)
 
 
