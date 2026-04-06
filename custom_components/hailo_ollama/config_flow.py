@@ -11,7 +11,7 @@ import voluptuous as vol
 
 from homeassistant.config_entries import ConfigEntry, ConfigFlow, ConfigFlowResult, OptionsFlow
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
-from homeassistant.helpers.selector import SelectSelector, SelectSelectorConfig
+from homeassistant.helpers.selector import SelectSelector, SelectSelectorConfig, SelectSelectorMode
 
 from .const import (
     CONF_HOST,
@@ -255,7 +255,7 @@ class HailoOllamaConfigFlow(ConfigFlow, domain=DOMAIN):
 
         schema: dict[Any, Any] = {
             vol.Required(CONF_MODEL, default=default_model): SelectSelector(
-                SelectSelectorConfig(options=self._models)
+                SelectSelectorConfig(mode=SelectSelectorMode.DROPDOWN, options=self._models)
             ),
             vol.Optional(
                 CONF_SYSTEM_PROMPT, default=DEFAULT_SYSTEM_PROMPT
@@ -269,7 +269,7 @@ class HailoOllamaConfigFlow(ConfigFlow, domain=DOMAIN):
         }
         if downloadable:
             schema[vol.Optional(CONF_MODEL_TO_PULL)] = SelectSelector(
-                SelectSelectorConfig(options=downloadable)
+                SelectSelectorConfig(mode=SelectSelectorMode.DROPDOWN, options=downloadable)
             )
 
         return self.async_show_form(
@@ -369,7 +369,7 @@ class HailoOllamaOptionsFlow(OptionsFlow):
 
         schema: dict[Any, Any] = {
             vol.Required(CONF_MODEL, default=default_model): SelectSelector(
-                SelectSelectorConfig(options=available_models or [current_model])
+                SelectSelectorConfig(mode=SelectSelectorMode.DROPDOWN, options=available_models or [current_model])
             ),
             vol.Optional(
                 CONF_SYSTEM_PROMPT,
@@ -386,7 +386,7 @@ class HailoOllamaOptionsFlow(OptionsFlow):
         }
         if downloadable:
             schema[vol.Optional(CONF_MODEL_TO_PULL)] = SelectSelector(
-                SelectSelectorConfig(options=downloadable)
+                SelectSelectorConfig(mode=SelectSelectorMode.DROPDOWN, options=downloadable)
             )
 
         return self.async_show_form(
