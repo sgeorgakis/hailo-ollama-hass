@@ -16,19 +16,13 @@
           "model": "Modèle",
           "system_prompt": "Invite système",
           "streaming": "Utiliser les réponses en streaming",
-          "show_thinking": "Afficher le processus de réflexion"
+          "show_thinking": "Afficher le processus de réflexion",
+          "model_to_pull": "Télécharger un nouveau modèle"
         },
         "data_description": {
-          "streaming": "Activez pour recevoir les tokens au fur et à mesure. Désactivez pour obtenir une réponse unique (plus simple, mais vous attendez la réponse complète).",
+          "streaming": "Activez pour recevoir les tokens au fur et à mesure. Désactivez pour obtenir une réponse unique.",
           "show_thinking": "Lorsqu'activé, le raisonnement contenu dans les balises &lt;think&gt; sera inclus dans la réponse. Désactivez pour ne renvoyer que la réponse finale.",
-          "model": "Sélectionnez un modèle téléchargé ou choisissez « Télécharger un nouveau modèle… » pour en obtenir un d'abord."
-        }
-      },
-      "pull_model": {
-        "title": "Télécharger un modèle",
-        "description": "Sélectionnez un modèle à télécharger depuis votre appareil Hailo.",
-        "data": {
-          "model_to_pull": "Modèle"
+          "model_to_pull": "Sélectionnez un modèle à télécharger. Seuls les modèles non encore installés sont affichés."
         }
       }
     },
@@ -53,19 +47,13 @@
           "model": "Modèle",
           "system_prompt": "Invite système",
           "streaming": "Utiliser les réponses en streaming",
-          "show_thinking": "Afficher le processus de réflexion"
+          "show_thinking": "Afficher le processus de réflexion",
+          "model_to_pull": "Télécharger un nouveau modèle"
         },
         "data_description": {
-          "streaming": "Activez pour recevoir les tokens au fur et à mesure. Désactivez pour obtenir une réponse unique (plus simple, mais vous attendez la réponse complète).",
+          "streaming": "Activez pour recevoir les tokens au fur et à mesure. Désactivez pour obtenir une réponse unique.",
           "show_thinking": "Lorsqu'activé, le raisonnement contenu dans les balises &lt;think&gt; sera inclus dans la réponse. Désactivez pour ne renvoyer que la réponse finale.",
-          "model": "Sélectionnez un modèle téléchargé ou choisissez « Télécharger un nouveau modèle… » pour en obtenir un d'abord."
-        }
-      },
-      "pull_model": {
-        "title": "Télécharger un modèle",
-        "description": "Sélectionnez un modèle à télécharger depuis votre appareil Hailo.",
-        "data": {
-          "model_to_pull": "Modèle"
+          "model_to_pull": "Sélectionnez un modèle à télécharger. Seuls les modèles non encore installés sont affichés."
         }
       }
     }

@@ -16,19 +16,13 @@
           "model": "Modello",
           "system_prompt": "Istruzione di sistema",
           "streaming": "Usa risposte in streaming",
-          "show_thinking": "Mostra il processo di ragionamento"
+          "show_thinking": "Mostra il processo di ragionamento",
+          "model_to_pull": "Scarica un nuovo modello"
         },
         "data_description": {
-          "streaming": "Attiva per ricevere i token in modo progressivo. Disattiva per ricevere un'unica risposta completa (più semplice, ma dovrai attendere la risposta intera).",
+          "streaming": "Attiva per ricevere i token in modo progressivo. Disattiva per ricevere un'unica risposta completa.",
           "show_thinking": "Se attivato, il ragionamento all'interno dei tag &lt;think&gt; verrà incluso nella risposta. Disattiva per restituire solo la risposta finale.",
-          "model": "Seleziona un modello scaricato oppure scegli «Scarica un nuovo modello…» per scaricarne uno prima."
-        }
-      },
-      "pull_model": {
-        "title": "Scarica un modello",
-        "description": "Seleziona un modello da scaricare dal tuo dispositivo Hailo.",
-        "data": {
-          "model_to_pull": "Modello"
+          "model_to_pull": "Seleziona un modello da scaricare. Vengono mostrati solo i modelli non ancora installati."
         }
       }
     },
@@ -53,19 +47,13 @@
           "model": "Modello",
           "system_prompt": "Istruzione di sistema",
           "streaming": "Usa risposte in streaming",
-          "show_thinking": "Mostra il processo di ragionamento"
+          "show_thinking": "Mostra il processo di ragionamento",
+          "model_to_pull": "Scarica un nuovo modello"
         },
         "data_description": {
-          "streaming": "Attiva per ricevere i token in modo progressivo. Disattiva per ricevere un'unica risposta completa (più semplice, ma dovrai attendere la risposta intera).",
+          "streaming": "Attiva per ricevere i token in modo progressivo. Disattiva per ricevere un'unica risposta completa.",
           "show_thinking": "Se attivato, il ragionamento all'interno dei tag &lt;think&gt; verrà incluso nella risposta. Disattiva per restituire solo la risposta finale.",
-          "model": "Seleziona un modello scaricato oppure scegli «Scarica un nuovo modello…» per scaricarne uno prima."
-        }
-      },
-      "pull_model": {
-        "title": "Scarica un modello",
-        "description": "Seleziona un modello da scaricare dal tuo dispositivo Hailo.",
-        "data": {
-          "model_to_pull": "Modello"
+          "model_to_pull": "Seleziona un modello da scaricare. Vengono mostrati solo i modelli non ancora installati."
         }
       }
     }

@@ -32,10 +32,7 @@ from .const import (
 
 _LOGGER = logging.getLogger(__name__)
 
-# Sentinel value shown in the model dropdown to navigate to the pull step.
-PULL_NEW_MODEL_SENTINEL = "Download a new model…"
-
-# Field key used in the pull_model step.
+# Field key for the optional "download a model" dropdown.
 CONF_MODEL_TO_PULL = "model_to_pull"
 
 
@@ -102,7 +99,7 @@ class HailoOllamaConfigFlow(ConfigFlow, domain=DOMAIN):
         self._host: str = DEFAULT_HOST
         self._port: int = DEFAULT_PORT
         self._models: list[str] = []
-        self._available_models: list[str] = []
+        self._available_models: list[str] | None = None
 
     async def _test_connection(self, host: str, port: int) -> str | None:
         """Test connection via /api/version. Returns version or None."""
@@ -162,7 +159,10 @@ class HailoOllamaConfigFlow(ConfigFlow, domain=DOMAIN):
             ) as resp:
                 if resp.status == 200:
                     data = await resp.json()
-                    return data.get("models", [])
+                    models = data.get("models", [])
+                    if models and isinstance(models[0], dict):
+                        return [m["name"] for m in models if "name" in m]
+                    return [m for m in models if isinstance(m, str)]
         except Exception as err:
             _LOGGER.warning("Failed to fetch available models: %s", err)
         return []
@@ -200,82 +200,81 @@ class HailoOllamaConfigFlow(ConfigFlow, domain=DOMAIN):
     async def async_step_pick_model(
         self, user_input: dict[str, Any] | None = None,
     ) -> ConfigFlowResult:
-        """Let the user pick a model or navigate to the download step."""
-        if user_input is not None:
-            if user_input[CONF_MODEL] == PULL_NEW_MODEL_SENTINEL:
-                return await self.async_step_pull_model()
-            return self.async_create_entry(
-                title=f"Hailo ({user_input[CONF_MODEL]})",
-                data={
-                    CONF_HOST: self._host,
-                    CONF_PORT: self._port,
-                    CONF_MODEL: user_input[CONF_MODEL],
-                    CONF_SYSTEM_PROMPT: user_input.get(
-                        CONF_SYSTEM_PROMPT, DEFAULT_SYSTEM_PROMPT
-                    ),
-                    CONF_STREAMING: user_input.get(
-                        CONF_STREAMING, DEFAULT_STREAMING
-                    ),
-                    CONF_SHOW_THINKING: user_input.get(
-                        CONF_SHOW_THINKING, DEFAULT_SHOW_THINKING
-                    ),
-                },
-            )
-
-        default_model = (
-            DEFAULT_MODEL if DEFAULT_MODEL in self._models else self._models[0]
-        )
-        options = self._models + [PULL_NEW_MODEL_SENTINEL]
-
-        return self.async_show_form(
-            step_id="pick_model",
-            data_schema=vol.Schema({
-                vol.Required(CONF_MODEL, default=default_model): vol.In(options),
-                vol.Optional(
-                    CONF_SYSTEM_PROMPT, default=DEFAULT_SYSTEM_PROMPT
-                ): str,
-                vol.Optional(
-                    CONF_STREAMING, default=DEFAULT_STREAMING
-                ): bool,
-                vol.Optional(
-                    CONF_SHOW_THINKING, default=DEFAULT_SHOW_THINKING
-                ): bool,
-            }),
-        )
-
-    async def async_step_pull_model(
-        self, user_input: dict[str, Any] | None = None,
-    ) -> ConfigFlowResult:
-        """Show available models and pull the selected one."""
+        """Let the user pick a model and optionally download a new one."""
         errors: dict[str, str] = {}
 
-        if not self._available_models:
+        if self._available_models is None:
             self._available_models = await self._fetch_available_models(
                 self._host, self._port
             )
 
         if user_input is not None:
-            model_name = user_input[CONF_MODEL_TO_PULL].strip()
-            session = async_get_clientsession(self.hass)
-            success, msg = await _pull_model(session, self._host, self._port, model_name)
-            if success:
-                _LOGGER.info("Pulled model '%s': %s", model_name, msg)
-                self._models = await self._fetch_models(self._host, self._port)
-                self._available_models = []
-                return await self.async_step_pick_model()
+            model_to_pull = (user_input.get(CONF_MODEL_TO_PULL) or "").strip()
+            if model_to_pull:
+                session = async_get_clientsession(self.hass)
+                success, msg = await _pull_model(
+                    session, self._host, self._port, model_to_pull
+                )
+                if success:
+                    _LOGGER.info("Pulled model '%s': %s", model_to_pull, msg)
+                    self._models = await self._fetch_models(self._host, self._port)
+                    self._available_models = None  # Trigger re-fetch on next render
+                else:
+                    _LOGGER.error("Failed to pull model '%s': %s", model_to_pull, msg)
+                    errors[CONF_MODEL_TO_PULL] = "pull_failed"
+                # Re-show the form with refreshed models (or error)
             else:
-                _LOGGER.error("Failed to pull model '%s': %s", model_name, msg)
-                errors[CONF_MODEL_TO_PULL] = "pull_failed"
+                return self.async_create_entry(
+                    title=f"Hailo ({user_input[CONF_MODEL]})",
+                    data={
+                        CONF_HOST: self._host,
+                        CONF_PORT: self._port,
+                        CONF_MODEL: user_input[CONF_MODEL],
+                        CONF_SYSTEM_PROMPT: user_input.get(
+                            CONF_SYSTEM_PROMPT, DEFAULT_SYSTEM_PROMPT
+                        ),
+                        CONF_STREAMING: user_input.get(
+                            CONF_STREAMING, DEFAULT_STREAMING
+                        ),
+                        CONF_SHOW_THINKING: user_input.get(
+                            CONF_SHOW_THINKING, DEFAULT_SHOW_THINKING
+                        ),
+                    },
+                )
 
+        # Re-fetch available models if cleared after a successful pull
+        if self._available_models is None:
+            self._available_models = await self._fetch_available_models(
+                self._host, self._port
+            )
+
+        default_model = (
+            DEFAULT_MODEL if DEFAULT_MODEL in self._models else self._models[0]
+        )
         downloadable = [m for m in self._available_models if m not in self._models]
 
+        schema: dict[Any, Any] = {
+            vol.Required(CONF_MODEL, default=default_model): SelectSelector(
+                SelectSelectorConfig(options=self._models)
+            ),
+            vol.Optional(
+                CONF_SYSTEM_PROMPT, default=DEFAULT_SYSTEM_PROMPT
+            ): str,
+            vol.Optional(
+                CONF_STREAMING, default=DEFAULT_STREAMING
+            ): bool,
+            vol.Optional(
+                CONF_SHOW_THINKING, default=DEFAULT_SHOW_THINKING
+            ): bool,
+        }
+        if downloadable:
+            schema[vol.Optional(CONF_MODEL_TO_PULL)] = SelectSelector(
+                SelectSelectorConfig(options=downloadable)
+            )
+
         return self.async_show_form(
-            step_id="pull_model",
-            data_schema=vol.Schema({
-                vol.Required(CONF_MODEL_TO_PULL): SelectSelector(
-                    SelectSelectorConfig(options=downloadable)
-                ),
-            }),
+            step_id="pick_model",
+            data_schema=vol.Schema(schema),
             errors=errors,
         )
 
@@ -287,7 +286,7 @@ class HailoOllamaOptionsFlow(OptionsFlow):
         """Initialize."""
         self._config_entry = config_entry
         self._models: list[str] = []
-        self._available_models: list[str] = []
+        self._available_models: list[str] | None = None
 
     async def _fetch_models(self, host: str, port: int) -> list[str]:
         """Fetch downloaded models from /api/tags."""
@@ -318,7 +317,10 @@ class HailoOllamaOptionsFlow(OptionsFlow):
             ) as resp:
                 if resp.status == 200:
                     data = await resp.json()
-                    return data.get("models", [])
+                    models = data.get("models", [])
+                    if models and isinstance(models[0], dict):
+                        return [m["name"] for m in models if "name" in m]
+                    return [m for m in models if isinstance(m, str)]
         except Exception as err:
             _LOGGER.warning("Options flow: failed to fetch available models: %s", err)
         return []
@@ -326,75 +328,69 @@ class HailoOllamaOptionsFlow(OptionsFlow):
     async def async_step_init(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
-        """Fetch downloaded models and show the options form."""
+        """Fetch models and show the options form."""
         host = self._config_entry.data[CONF_HOST]
         port = self._config_entry.data[CONF_PORT]
+        errors: dict[str, str] = {}
 
         if not self._models:
             self._models = await self._fetch_models(host, port)
+        if self._available_models is None:
+            self._available_models = await self._fetch_available_models(host, port)
 
         if user_input is not None:
-            if user_input[CONF_MODEL] == PULL_NEW_MODEL_SENTINEL:
-                return await self.async_step_pull_model()
-            return self.async_create_entry(title="", data=user_input)
+            model_to_pull = (user_input.get(CONF_MODEL_TO_PULL) or "").strip()
+            if model_to_pull:
+                session = async_get_clientsession(self.hass)
+                success, msg = await _pull_model(session, host, port, model_to_pull)
+                if success:
+                    _LOGGER.info("Pulled model '%s': %s", model_to_pull, msg)
+                    self._models = []
+                    self._available_models = None  # Trigger re-fetch on next render
+                else:
+                    _LOGGER.error("Failed to pull model '%s': %s", model_to_pull, msg)
+                    errors[CONF_MODEL_TO_PULL] = "pull_failed"
+                # Re-show the form
+            else:
+                entry_data = {k: v for k, v in user_input.items() if k != CONF_MODEL_TO_PULL}
+                return self.async_create_entry(title="", data=entry_data)
+
+        # Re-fetch if cleared after a successful pull
+        if not self._models:
+            self._models = await self._fetch_models(host, port)
+        if self._available_models is None:
+            self._available_models = await self._fetch_available_models(host, port)
 
         current = self._config_entry.options or self._config_entry.data
         current_model = current.get(CONF_MODEL, "")
         available_models = self._models or ([current_model] if current_model else [])
         default_model = current_model if current_model in available_models else (available_models[0] if available_models else current_model)
-        options = available_models + [PULL_NEW_MODEL_SENTINEL]
+        downloadable = [m for m in self._available_models if m not in self._models]
+
+        schema: dict[Any, Any] = {
+            vol.Required(CONF_MODEL, default=default_model): SelectSelector(
+                SelectSelectorConfig(options=available_models or [current_model])
+            ),
+            vol.Optional(
+                CONF_SYSTEM_PROMPT,
+                default=current.get(CONF_SYSTEM_PROMPT, DEFAULT_SYSTEM_PROMPT),
+            ): str,
+            vol.Optional(
+                CONF_STREAMING,
+                default=current.get(CONF_STREAMING, DEFAULT_STREAMING),
+            ): bool,
+            vol.Optional(
+                CONF_SHOW_THINKING,
+                default=current.get(CONF_SHOW_THINKING, DEFAULT_SHOW_THINKING),
+            ): bool,
+        }
+        if downloadable:
+            schema[vol.Optional(CONF_MODEL_TO_PULL)] = SelectSelector(
+                SelectSelectorConfig(options=downloadable)
+            )
 
         return self.async_show_form(
             step_id="init",
-            data_schema=vol.Schema({
-                vol.Required(CONF_MODEL, default=default_model): vol.In(options),
-                vol.Optional(
-                    CONF_SYSTEM_PROMPT,
-                    default=current.get(CONF_SYSTEM_PROMPT, DEFAULT_SYSTEM_PROMPT),
-                ): str,
-                vol.Optional(
-                    CONF_STREAMING,
-                    default=current.get(CONF_STREAMING, DEFAULT_STREAMING),
-                ): bool,
-                vol.Optional(
-                    CONF_SHOW_THINKING,
-                    default=current.get(CONF_SHOW_THINKING, DEFAULT_SHOW_THINKING),
-                ): bool,
-            }),
-        )
-
-    async def async_step_pull_model(
-        self, user_input: dict[str, Any] | None = None
-    ) -> ConfigFlowResult:
-        """Show available models and pull the selected one."""
-        host = self._config_entry.data[CONF_HOST]
-        port = self._config_entry.data[CONF_PORT]
-        errors: dict[str, str] = {}
-
-        if not self._available_models:
-            self._available_models = await self._fetch_available_models(host, port)
-
-        if user_input is not None:
-            model_name = user_input[CONF_MODEL_TO_PULL].strip()
-            session = async_get_clientsession(self.hass)
-            success, msg = await _pull_model(session, host, port, model_name)
-            if success:
-                _LOGGER.info("Pulled model '%s': %s", model_name, msg)
-                self._models = []  # force re-fetch on return to init
-                self._available_models = []
-                return await self.async_step_init()
-            else:
-                _LOGGER.error("Failed to pull model '%s': %s", model_name, msg)
-                errors[CONF_MODEL_TO_PULL] = "pull_failed"
-
-        downloadable = [m for m in self._available_models if m not in self._models]
-
-        return self.async_show_form(
-            step_id="pull_model",
-            data_schema=vol.Schema({
-                vol.Required(CONF_MODEL_TO_PULL): SelectSelector(
-                    SelectSelectorConfig(options=downloadable)
-                ),
-            }),
+            data_schema=vol.Schema(schema),
             errors=errors,
         )

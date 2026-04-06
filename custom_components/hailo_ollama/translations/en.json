@@ -16,19 +16,13 @@
           "model": "Model",
           "system_prompt": "System prompt",
           "streaming": "Use streaming responses",
-          "show_thinking": "Show thinking process"
+          "show_thinking": "Show thinking process",
+          "model_to_pull": "Download a new model"
         },
         "data_description": {
           "streaming": "Enable for token-by-token streaming. Disable for a single response (simpler but you wait for the full reply).",
           "show_thinking": "When enabled, reasoning inside &lt;think&gt; tags will be included in the response. Disable to return only the final answer.",
-          "model": "Select a downloaded model, or choose \"Download a new model…\" to fetch one first."
-        }
-      },
-      "pull_model": {
-        "title": "Download a Model",
-        "description": "Select a model to download from your Hailo device.",
-        "data": {
-          "model_to_pull": "Model"
+          "model_to_pull": "Select a model to download. Only models not yet installed are shown."
         }
       }
     },
@@ -53,19 +47,13 @@
           "model": "Model",
           "system_prompt": "System prompt",
           "streaming": "Use streaming responses",
-          "show_thinking": "Show thinking process"
+          "show_thinking": "Show thinking process",
+          "model_to_pull": "Download a new model"
         },
         "data_description": {
           "streaming": "Enable for token-by-token streaming. Disable for a single response (simpler but you wait for the full reply).",
           "show_thinking": "When enabled, reasoning inside &lt;think&gt; tags will be included in the response. Disable to return only the final answer.",
-          "model": "Select a downloaded model, or choose \"Download a new model…\" to fetch one first."
-        }
-      },
-      "pull_model": {
-        "title": "Download a Model",
-        "description": "Select a model to download from your Hailo device.",
-        "data": {
-          "model_to_pull": "Model"
+          "model_to_pull": "Select a model to download. Only models not yet installed are shown."
         }
       }
     }

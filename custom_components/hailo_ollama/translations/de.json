@@ -16,19 +16,13 @@
           "model": "Modell",
           "system_prompt": "Systemaufforderung",
           "streaming": "Streaming-Antworten verwenden",
-          "show_thinking": "Denkprozess anzeigen"
+          "show_thinking": "Denkprozess anzeigen",
+          "model_to_pull": "Neues Modell herunterladen"
         },
         "data_description": {
           "streaming": "Aktivieren für Token-für-Token-Streaming. Deaktivieren für eine einzelne Antwort (einfacher, aber Sie warten auf die vollständige Antwort).",
           "show_thinking": "Wenn aktiviert, wird der Denkprozess innerhalb von &lt;think&gt;-Tags in der Antwort angezeigt. Deaktivieren, um nur die endgültige Antwort zurückzugeben.",
-          "model": "Wählen Sie ein heruntergeladenes Modell oder „Neues Modell herunterladen…", um zuerst eines zu laden."
-        }
-      },
-      "pull_model": {
-        "title": "Modell herunterladen",
-        "description": "Wählen Sie ein Modell zum Herunterladen von Ihrem Hailo-Gerät.",
-        "data": {
-          "model_to_pull": "Modell"
+          "model_to_pull": "Wählen Sie ein Modell zum Herunterladen. Es werden nur noch nicht installierte Modelle angezeigt."
         }
       }
     },
@@ -53,19 +47,13 @@
           "model": "Modell",
           "system_prompt": "Systemaufforderung",
           "streaming": "Streaming-Antworten verwenden",
-          "show_thinking": "Denkprozess anzeigen"
+          "show_thinking": "Denkprozess anzeigen",
+          "model_to_pull": "Neues Modell herunterladen"
         },
         "data_description": {
           "streaming": "Aktivieren für Token-für-Token-Streaming. Deaktivieren für eine einzelne Antwort (einfacher, aber Sie warten auf die vollständige Antwort).",
           "show_thinking": "Wenn aktiviert, wird der Denkprozess innerhalb von &lt;think&gt;-Tags in der Antwort angezeigt. Deaktivieren, um nur die endgültige Antwort zurückzugeben.",
-          "model": "Wählen Sie ein heruntergeladenes Modell oder „Neues Modell herunterladen…", um zuerst eines zu laden."
-        }
-      },
-      "pull_model": {
-        "title": "Modell herunterladen",
-        "description": "Wählen Sie ein Modell zum Herunterladen von Ihrem Hailo-Gerät.",
-        "data": {
-          "model_to_pull": "Modell"
+          "model_to_pull": "Wählen Sie ein Modell zum Herunterladen. Es werden nur noch nicht installierte Modelle angezeigt."
         }
       }
     }

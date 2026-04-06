@@ -16,19 +16,13 @@
           "model": "Modelo",
           "system_prompt": "Instrução do sistema",
           "streaming": "Utilizar respostas em streaming",
-          "show_thinking": "Mostrar processo de raciocínio"
+          "show_thinking": "Mostrar processo de raciocínio",
+          "model_to_pull": "Transferir novo modelo"
         },
         "data_description": {
-          "streaming": "Ative para receber tokens progressivamente. Desative para obter uma única resposta completa (mais simples, mas terá de aguardar pela resposta integral).",
+          "streaming": "Ative para receber tokens progressivamente. Desative para obter uma única resposta completa.",
           "show_thinking": "Quando ativado, o raciocínio dentro das etiquetas &lt;think&gt; será incluído na resposta. Desative para devolver apenas a resposta final.",
-          "model": "Selecione um modelo transferido ou escolha «Transferir novo modelo…» para obter um primeiro."
-        }
-      },
-      "pull_model": {
-        "title": "Transferir modelo",
-        "description": "Selecione um modelo para transferir do seu dispositivo Hailo.",
-        "data": {
-          "model_to_pull": "Modelo"
+          "model_to_pull": "Selecione um modelo para transferir. Apenas modelos ainda não instalados são apresentados."
         }
       }
     },
@@ -53,19 +47,13 @@
           "model": "Modelo",
           "system_prompt": "Instrução do sistema",
           "streaming": "Utilizar respostas em streaming",
-          "show_thinking": "Mostrar processo de raciocínio"
+          "show_thinking": "Mostrar processo de raciocínio",
+          "model_to_pull": "Transferir novo modelo"
         },
         "data_description": {
-          "streaming": "Ative para receber tokens progressivamente. Desative para obter uma única resposta completa (mais simples, mas terá de aguardar pela resposta integral).",
+          "streaming": "Ative para receber tokens progressivamente. Desative para obter uma única resposta completa.",
           "show_thinking": "Quando ativado, o raciocínio dentro das etiquetas &lt;think&gt; será incluído na resposta. Desative para devolver apenas a resposta final.",
-          "model": "Selecione um modelo transferido ou escolha «Transferir novo modelo…» para obter um primeiro."
-        }
-      },
-      "pull_model": {
-        "title": "Transferir modelo",
-        "description": "Selecione um modelo para transferir do seu dispositivo Hailo.",
-        "data": {
-          "model_to_pull": "Modelo"
+          "model_to_pull": "Selecione um modelo para transferir. Apenas modelos ainda não instalados são apresentados."
         }
       }
     }

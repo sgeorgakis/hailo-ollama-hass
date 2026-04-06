@@ -245,6 +245,7 @@ async def test_async_step_user_success_proceeds_to_pick_model(config_flow):
     config_flow.async_show_form = MagicMock(return_value=pick_model_form)
     config_flow._test_connection = AsyncMock(return_value="1.0.0")
     config_flow._fetch_models = AsyncMock(return_value=["llama3.2:3b"])
+    config_flow._fetch_available_models = AsyncMock(return_value=[])
 
     user_input = {CONF_HOST: "localhost", CONF_PORT: 8000}
     result = await config_flow.async_step_user(user_input)
@@ -263,6 +264,7 @@ async def test_async_step_pick_model_no_input(config_flow):
     form_result = {"type": "form", "step_id": "pick_model"}
     config_flow.async_show_form = MagicMock(return_value=form_result)
     config_flow._models = ["llama3.2:3b", "deepseek-r1:1.5b"]
+    config_flow._available_models = []
 
     result = await config_flow.async_step_pick_model(None)
 
@@ -294,6 +296,7 @@ async def test_async_step_pick_model_with_input_creates_entry(config_flow):
     config_flow._host = "localhost"
     config_flow._port = 8000
     config_flow._models = ["llama3.2:3b"]
+    config_flow._available_models = []
 
     user_input = {
         CONF_MODEL: "llama3.2:3b",
@@ -336,6 +339,7 @@ async def test_options_flow_shows_form(mock_hass):
         CONF_STREAMING: True,
     })
     flow._models = ["model-a", "model-b"]
+    flow._available_models = []
     form_result = {"type": "form", "step_id": "init"}
     flow.async_show_form = MagicMock(return_value=form_result)
 
@@ -358,6 +362,7 @@ async def test_options_flow_saves_entry(mock_hass):
         CONF_STREAMING: True,
     })
     flow._models = ["model-a", "model-b"]
+    flow._available_models = []
     created = {"type": "create_entry", "data": {}}
     flow.async_create_entry = MagicMock(return_value=created)
 
@@ -373,47 +378,50 @@ async def test_options_flow_saves_entry(mock_hass):
 
 
 @pytest.mark.asyncio
-async def test_pick_model_sentinel_navigates_to_pull_step(mock_hass):
-    """Selecting the sentinel value in pick_model navigates to async_step_pull_model."""
-    from custom_components.hailo_ollama.config_flow import PULL_NEW_MODEL_SENTINEL
+async def test_pick_model_shows_downloadable_models_inline(mock_hass):
+    """pick_model form includes model_to_pull SelectSelector when downloadable models exist."""
+    from custom_components.hailo_ollama.config_flow import CONF_MODEL_TO_PULL
 
     flow = HailoOllamaConfigFlow()
     flow.hass = mock_hass
     flow._host = "localhost"
     flow._port = 8000
-    flow._models = ["existing-model"]
+    flow._models = ["installed-model"]
+    flow._available_models = ["installed-model", "new-model"]
 
-    pull_form = {"type": "form", "step_id": "pull_model"}
-    flow.async_show_form = MagicMock(return_value=pull_form)
-    flow._fetch_available_models = AsyncMock(return_value=["new-model-a", "new-model-b"])
+    flow.async_show_form = MagicMock(return_value={"type": "form", "step_id": "pick_model"})
 
-    result = await flow.async_step_pick_model({CONF_MODEL: PULL_NEW_MODEL_SENTINEL})
+    await flow.async_step_pick_model(None)
 
-    assert result["step_id"] == "pull_model"
+    call_kwargs = flow.async_show_form.call_args.kwargs
+    schema_keys = [getattr(k, "schema", k) for k in call_kwargs["data_schema"].schema]
+    assert CONF_MODEL_TO_PULL in schema_keys
 
 
 @pytest.mark.asyncio
-async def test_pull_model_step_shows_available_models(mock_hass):
-    """async_step_pull_model fetches /hailo/v1/list and shows a dropdown."""
+async def test_pick_model_no_download_field_when_all_installed(mock_hass):
+    """pick_model form omits model_to_pull when no new models are available."""
+    from custom_components.hailo_ollama.config_flow import CONF_MODEL_TO_PULL
+
     flow = HailoOllamaConfigFlow()
     flow.hass = mock_hass
     flow._host = "localhost"
     flow._port = 8000
-    flow._models = ["existing-model"]
+    flow._models = ["model-a"]
+    flow._available_models = ["model-a"]  # nothing new to download
 
-    flow.async_show_form = MagicMock(return_value={"type": "form", "step_id": "pull_model"})
-    flow._fetch_available_models = AsyncMock(return_value=["avail-a", "avail-b"])
+    flow.async_show_form = MagicMock(return_value={"type": "form", "step_id": "pick_model"})
 
-    await flow.async_step_pull_model(None)
+    await flow.async_step_pick_model(None)
 
-    flow._fetch_available_models.assert_called_once()
-    flow.async_show_form.assert_called_once()
-    assert flow._available_models == ["avail-a", "avail-b"]
+    call_kwargs = flow.async_show_form.call_args.kwargs
+    schema_keys = [getattr(k, "schema", k) for k in call_kwargs["data_schema"].schema]
+    assert CONF_MODEL_TO_PULL not in schema_keys
 
 
 @pytest.mark.asyncio
-async def test_pull_model_step_success_returns_to_pick_model(mock_hass):
-    """A successful pull refreshes _models and returns to async_step_pick_model."""
+async def test_pick_model_pull_success_refreshes_and_reshows(mock_hass):
+    """Submitting model_to_pull pulls the model, refreshes the list, and re-shows the form."""
     from custom_components.hailo_ollama.config_flow import CONF_MODEL_TO_PULL
 
     flow = HailoOllamaConfigFlow()
@@ -447,25 +455,27 @@ async def test_pull_model_step_success_returns_to_pick_model(mock_hass):
         "custom_components.hailo_ollama.config_flow.async_get_clientsession",
         return_value=session,
     ):
-        await flow.async_step_pull_model({CONF_MODEL_TO_PULL: "new-model"})
+        await flow.async_step_pick_model({
+            CONF_MODEL: "old-model",
+            CONF_MODEL_TO_PULL: "new-model",
+        })
 
     assert flow._models == ["old-model", "new-model"]
-    assert flow._available_models == []
-    # Should have navigated back to pick_model
     flow.async_show_form.assert_called_once()
     assert flow.async_show_form.call_args.kwargs["step_id"] == "pick_model"
 
 
 @pytest.mark.asyncio
-async def test_pull_model_step_failure_shows_error(mock_hass):
-    """A failed pull shows pull_failed error and stays on the pull_model step."""
+async def test_pick_model_pull_failure_shows_error(mock_hass):
+    """A failed pull shows pull_failed error and re-shows the pick_model form."""
     from custom_components.hailo_ollama.config_flow import CONF_MODEL_TO_PULL
 
     flow = HailoOllamaConfigFlow()
     flow.hass = mock_hass
     flow._host = "localhost"
     flow._port = 8000
-    flow._available_models = ["bad-model"]
+    flow._models = ["old-model"]
+    flow._available_models = ["old-model", "bad-model"]
 
     pull_resp = AsyncMock()
     pull_resp.status = 500
@@ -474,42 +484,24 @@ async def test_pull_model_step_failure_shows_error(mock_hass):
     session = MagicMock()
     session.post = MagicMock(return_value=AsyncMock(__aenter__=AsyncMock(return_value=pull_resp)))
 
-    flow.async_show_form = MagicMock(return_value={"type": "form", "step_id": "pull_model"})
+    flow.async_show_form = MagicMock(return_value={"type": "form", "step_id": "pick_model"})
 
     with patch(
         "custom_components.hailo_ollama.config_flow.async_get_clientsession",
         return_value=session,
     ):
-        await flow.async_step_pull_model({CONF_MODEL_TO_PULL: "bad-model"})
+        await flow.async_step_pick_model({
+            CONF_MODEL: "old-model",
+            CONF_MODEL_TO_PULL: "bad-model",
+        })
 
     call_kwargs = flow.async_show_form.call_args.kwargs
     assert call_kwargs["errors"].get(CONF_MODEL_TO_PULL) == "pull_failed"
 
 
 @pytest.mark.asyncio
-async def test_options_flow_sentinel_navigates_to_pull_step(mock_hass):
-    """Selecting the sentinel in options init navigates to async_step_pull_model."""
-    from custom_components.hailo_ollama.config_flow import PULL_NEW_MODEL_SENTINEL
-
-    flow = _make_options_flow(mock_hass, {
-        CONF_HOST: "localhost",
-        CONF_PORT: 8000,
-        CONF_MODEL: "existing-model",
-    })
-    flow._models = ["existing-model"]
-
-    pull_form = {"type": "form", "step_id": "pull_model"}
-    flow.async_show_form = MagicMock(return_value=pull_form)
-    flow._fetch_available_models = AsyncMock(return_value=["avail-a"])
-
-    result = await flow.async_step_init({CONF_MODEL: PULL_NEW_MODEL_SENTINEL})
-
-    assert result["step_id"] == "pull_model"
-
-
-@pytest.mark.asyncio
-async def test_options_pull_model_success_returns_to_init(mock_hass):
-    """A successful pull in options flow refreshes models and returns to init."""
+async def test_options_pull_success_refreshes_and_reshows(mock_hass):
+    """Submitting model_to_pull in options flow pulls, refreshes, and re-shows the form."""
     from custom_components.hailo_ollama.config_flow import CONF_MODEL_TO_PULL
 
     flow = _make_options_flow(mock_hass, {
@@ -519,6 +511,7 @@ async def test_options_pull_model_success_returns_to_init(mock_hass):
         CONF_SYSTEM_PROMPT: DEFAULT_SYSTEM_PROMPT,
         CONF_STREAMING: True,
     })
+    flow._models = ["old-model"]
     flow._available_models = ["old-model", "new-model"]
 
     pull_chunks = [b'{"status":"success"}\n']
@@ -545,7 +538,10 @@ async def test_options_pull_model_success_returns_to_init(mock_hass):
         "custom_components.hailo_ollama.config_flow.async_get_clientsession",
         return_value=session,
     ):
-        await flow.async_step_pull_model({CONF_MODEL_TO_PULL: "new-model"})
+        await flow.async_step_init({
+            CONF_MODEL: "old-model",
+            CONF_MODEL_TO_PULL: "new-model",
+        })
 
     assert flow._models == ["old-model", "new-model"]
     flow.async_show_form.assert_called_once()
@@ -573,6 +569,7 @@ async def test_options_flow_fetches_models(mock_hass):
 
     form_result = {"type": "form", "step_id": "init"}
     flow.async_show_form = MagicMock(return_value=form_result)
+    flow._fetch_available_models = AsyncMock(return_value=[])
 
     with patch(
         "custom_components.hailo_ollama.config_flow.async_get_clientsession",
@@ -599,6 +596,7 @@ async def test_options_flow_uses_options_as_defaults(mock_hass):
         },
     )
     flow._models = ["model-a", "model-b"]
+    flow._available_models = []
     flow.async_show_form = MagicMock(return_value={"type": "form", "step_id": "init"})
 
     await flow.async_step_init(None)

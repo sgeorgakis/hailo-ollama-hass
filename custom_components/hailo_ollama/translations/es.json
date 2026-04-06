@@ -16,19 +16,13 @@
           "model": "Modelo",
           "system_prompt": "Instrucción del sistema",
           "streaming": "Usar respuestas en streaming",
-          "show_thinking": "Mostrar proceso de razonamiento"
+          "show_thinking": "Mostrar proceso de razonamiento",
+          "model_to_pull": "Descargar nuevo modelo"
         },
         "data_description": {
-          "streaming": "Activa para recibir tokens de forma progresiva. Desactiva para recibir una única respuesta completa (más sencillo, pero tendrás que esperar hasta el final).",
+          "streaming": "Activa para recibir tokens de forma progresiva. Desactiva para recibir una única respuesta completa.",
           "show_thinking": "Cuando está activado, el razonamiento dentro de las etiquetas &lt;think&gt; se incluirá en la respuesta. Desactiva para devolver solo la respuesta final.",
-          "model": "Selecciona un modelo descargado o elige \"Descargar nuevo modelo…\" para obtener uno primero."
-        }
-      },
-      "pull_model": {
-        "title": "Descargar modelo",
-        "description": "Selecciona un modelo para descargar desde tu dispositivo Hailo.",
-        "data": {
-          "model_to_pull": "Modelo"
+          "model_to_pull": "Selecciona un modelo para descargar. Solo se muestran los modelos aún no instalados."
         }
       }
     },
@@ -53,19 +47,13 @@
           "model": "Modelo",
           "system_prompt": "Instrucción del sistema",
           "streaming": "Usar respuestas en streaming",
-          "show_thinking": "Mostrar proceso de razonamiento"
+          "show_thinking": "Mostrar proceso de razonamiento",
+          "model_to_pull": "Descargar nuevo modelo"
         },
         "data_description": {
-          "streaming": "Activa para recibir tokens de forma progresiva. Desactiva para recibir una única respuesta completa (más sencillo, pero tendrás que esperar hasta el final).",
+          "streaming": "Activa para recibir tokens de forma progresiva. Desactiva para recibir una única respuesta completa.",
           "show_thinking": "Cuando está activado, el razonamiento dentro de las etiquetas &lt;think&gt; se incluirá en la respuesta. Desactiva para devolver solo la respuesta final.",
-          "model": "Selecciona un modelo descargado o elige \"Descargar nuevo modelo…\" para obtener uno primero."
-        }
-      },
-      "pull_model": {
-        "title": "Descargar modelo",
-        "description": "Selecciona un modelo para descargar desde tu dispositivo Hailo.",
-        "data": {
-          "model_to_pull": "Modelo"
+          "model_to_pull": "Selecciona un modelo para descargar. Solo se muestran los modelos aún no instalados."
         }
       }
     }
