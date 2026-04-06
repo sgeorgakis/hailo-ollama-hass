@@ -16,17 +16,26 @@
           "model": "Modelo",
           "system_prompt": "Instrucción del sistema",
           "streaming": "Usar respuestas en streaming",
-          "show_thinking": "Mostrar proceso de razonamiento"
+          "show_thinking": "Mostrar proceso de razonamiento",
+          "model_to_pull": "Descargar nuevo modelo"
         },
         "data_description": {
-          "streaming": "Activa para recibir tokens de forma progresiva. Desactiva para recibir una única respuesta completa (más sencillo, pero tendrás que esperar hasta el final).",
-          "show_thinking": "Cuando está activado, el razonamiento dentro de las etiquetas &lt;think&gt; se incluirá en la respuesta. Desactiva para devolver solo la respuesta final."
+          "streaming": "Activa para recibir tokens de forma progresiva. Desactiva para recibir una única respuesta completa.",
+          "show_thinking": "Cuando está activado, el razonamiento dentro de las etiquetas &lt;think&gt; se incluirá en la respuesta. Desactiva para devolver solo la respuesta final.",
+          "model_to_pull": "Selecciona un modelo de la lista para descargar o escribe un nombre manualmente."
         }
       }
     },
     "error": {
       "cannot_connect": "No se puede conectar a Hailo-Ollama",
-      "no_models": "No se encontraron modelos en el dispositivo"
+      "no_models": "No se encontraron modelos en el dispositivo",
+      "pull_failed": "Error al descargar el modelo"
+    }
+  },
+  "entity": {
+    "sensor": {
+      "response_time": {"name": "Tiempo de respuesta"},
+      "response_chars": {"name": "Caracteres de respuesta"}
     }
   },
   "options": {
@@ -38,11 +47,13 @@
           "model": "Modelo",
           "system_prompt": "Instrucción del sistema",
           "streaming": "Usar respuestas en streaming",
-          "show_thinking": "Mostrar proceso de razonamiento"
+          "show_thinking": "Mostrar proceso de razonamiento",
+          "model_to_pull": "Descargar nuevo modelo"
         },
         "data_description": {
-          "streaming": "Activa para recibir tokens de forma progresiva. Desactiva para recibir una única respuesta completa (más sencillo, pero tendrás que esperar hasta el final).",
-          "show_thinking": "Cuando está activado, el razonamiento dentro de las etiquetas &lt;think&gt; se incluirá en la respuesta. Desactiva para devolver solo la respuesta final."
+          "streaming": "Activa para recibir tokens de forma progresiva. Desactiva para recibir una única respuesta completa.",
+          "show_thinking": "Cuando está activado, el razonamiento dentro de las etiquetas &lt;think&gt; se incluirá en la respuesta. Desactiva para devolver solo la respuesta final.",
+          "model_to_pull": "Selecciona un modelo de la lista para descargar o escribe un nombre manualmente."
         }
       }
     }

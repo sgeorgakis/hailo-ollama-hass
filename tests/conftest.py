@@ -5,6 +5,12 @@ from unittest.mock import MagicMock
 
 import pytest
 
+# Older HA test packages may not include Platform.AI_TASK — add it so that
+# __init__.py can reference it without raising AttributeError at import time.
+from homeassistant.const import Platform
+if not hasattr(Platform, "AI_TASK"):
+    Platform.AI_TASK = "ai_task"  # type: ignore[attr-defined]
+
 
 # Create a proper base class for ConversationEntity
 class MockConversationEntity:

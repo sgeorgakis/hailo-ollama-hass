@@ -16,17 +16,26 @@
           "model": "Modelo",
           "system_prompt": "Instrução do sistema",
           "streaming": "Utilizar respostas em streaming",
-          "show_thinking": "Mostrar processo de raciocínio"
+          "show_thinking": "Mostrar processo de raciocínio",
+          "model_to_pull": "Transferir novo modelo"
         },
         "data_description": {
-          "streaming": "Ative para receber tokens progressivamente. Desative para obter uma única resposta completa (mais simples, mas terá de aguardar pela resposta integral).",
-          "show_thinking": "Quando ativado, o raciocínio dentro das etiquetas &lt;think&gt; será incluído na resposta. Desative para devolver apenas a resposta final."
+          "streaming": "Ative para receber tokens progressivamente. Desative para obter uma única resposta completa.",
+          "show_thinking": "Quando ativado, o raciocínio dentro das etiquetas &lt;think&gt; será incluído na resposta. Desative para devolver apenas a resposta final.",
+          "model_to_pull": "Selecione um modelo da lista para transferir ou introduza um nome manualmente."
         }
       }
     },
     "error": {
       "cannot_connect": "Não é possível ligar ao Hailo-Ollama",
-      "no_models": "Nenhum modelo encontrado no dispositivo"
+      "no_models": "Nenhum modelo encontrado no dispositivo",
+      "pull_failed": "Falha ao transferir o modelo"
+    }
+  },
+  "entity": {
+    "sensor": {
+      "response_time": {"name": "Tempo de resposta"},
+      "response_chars": {"name": "Caracteres de resposta"}
     }
   },
   "options": {
@@ -38,11 +47,13 @@
           "model": "Modelo",
           "system_prompt": "Instrução do sistema",
           "streaming": "Utilizar respostas em streaming",
-          "show_thinking": "Mostrar processo de raciocínio"
+          "show_thinking": "Mostrar processo de raciocínio",
+          "model_to_pull": "Transferir novo modelo"
         },
         "data_description": {
-          "streaming": "Ative para receber tokens progressivamente. Desative para obter uma única resposta completa (mais simples, mas terá de aguardar pela resposta integral).",
-          "show_thinking": "Quando ativado, o raciocínio dentro das etiquetas &lt;think&gt; será incluído na resposta. Desative para devolver apenas a resposta final."
+          "streaming": "Ative para receber tokens progressivamente. Desative para obter uma única resposta completa.",
+          "show_thinking": "Quando ativado, o raciocínio dentro das etiquetas &lt;think&gt; será incluído na resposta. Desative para devolver apenas a resposta final.",
+          "model_to_pull": "Selecione um modelo da lista para transferir ou introduza um nome manualmente."
         }
       }
     }

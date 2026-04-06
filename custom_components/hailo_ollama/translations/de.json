@@ -16,17 +16,26 @@
           "model": "Modell",
           "system_prompt": "Systemaufforderung",
           "streaming": "Streaming-Antworten verwenden",
-          "show_thinking": "Denkprozess anzeigen"
+          "show_thinking": "Denkprozess anzeigen",
+          "model_to_pull": "Neues Modell herunterladen"
         },
         "data_description": {
           "streaming": "Aktivieren für Token-für-Token-Streaming. Deaktivieren für eine einzelne Antwort (einfacher, aber Sie warten auf die vollständige Antwort).",
-          "show_thinking": "Wenn aktiviert, wird der Denkprozess innerhalb von &lt;think&gt;-Tags in der Antwort angezeigt. Deaktivieren, um nur die endgültige Antwort zurückzugeben."
+          "show_thinking": "Wenn aktiviert, wird der Denkprozess innerhalb von &lt;think&gt;-Tags in der Antwort angezeigt. Deaktivieren, um nur die endgültige Antwort zurückzugeben.",
+          "model_to_pull": "Wählen Sie ein Modell aus der Liste zum Herunterladen oder geben Sie einen Namen manuell ein."
         }
       }
     },
     "error": {
       "cannot_connect": "Verbindung zu Hailo-Ollama nicht möglich",
-      "no_models": "Keine Modelle auf dem Gerät gefunden"
+      "no_models": "Keine Modelle auf dem Gerät gefunden",
+      "pull_failed": "Modell konnte nicht heruntergeladen werden"
+    }
+  },
+  "entity": {
+    "sensor": {
+      "response_time": {"name": "Antwortzeit"},
+      "response_chars": {"name": "Antwortzeichen"}
     }
   },
   "options": {
@@ -38,11 +47,13 @@
           "model": "Modell",
           "system_prompt": "Systemaufforderung",
           "streaming": "Streaming-Antworten verwenden",
-          "show_thinking": "Denkprozess anzeigen"
+          "show_thinking": "Denkprozess anzeigen",
+          "model_to_pull": "Neues Modell herunterladen"
         },
         "data_description": {
           "streaming": "Aktivieren für Token-für-Token-Streaming. Deaktivieren für eine einzelne Antwort (einfacher, aber Sie warten auf die vollständige Antwort).",
-          "show_thinking": "Wenn aktiviert, wird der Denkprozess innerhalb von &lt;think&gt;-Tags in der Antwort angezeigt. Deaktivieren, um nur die endgültige Antwort zurückzugeben."
+          "show_thinking": "Wenn aktiviert, wird der Denkprozess innerhalb von &lt;think&gt;-Tags in der Antwort angezeigt. Deaktivieren, um nur die endgültige Antwort zurückzugeben.",
+          "model_to_pull": "Wählen Sie ein Modell aus der Liste zum Herunterladen oder geben Sie einen Namen manuell ein."
         }
       }
     }

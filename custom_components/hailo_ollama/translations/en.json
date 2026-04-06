@@ -16,17 +16,26 @@
           "model": "Model",
           "system_prompt": "System prompt",
           "streaming": "Use streaming responses",
-          "show_thinking": "Show thinking process"
+          "show_thinking": "Show thinking process",
+          "model_to_pull": "Download a new model"
         },
         "data_description": {
           "streaming": "Enable for token-by-token streaming. Disable for a single response (simpler but you wait for the full reply).",
-          "show_thinking": "When enabled, reasoning inside &lt;think&gt; tags will be included in the response. Disable to return only the final answer."
+          "show_thinking": "When enabled, reasoning inside &lt;think&gt; tags will be included in the response. Disable to return only the final answer.",
+          "model_to_pull": "Select a model to download from the list, or type a name manually."
         }
       }
     },
     "error": {
       "cannot_connect": "Cannot connect to Hailo-Ollama",
-      "no_models": "No models found on device"
+      "no_models": "No models found on device",
+      "pull_failed": "Failed to download model"
+    }
+  },
+  "entity": {
+    "sensor": {
+      "response_time": {"name": "Response Time"},
+      "response_chars": {"name": "Response Characters"}
     }
   },
   "options": {
@@ -38,11 +47,13 @@
           "model": "Model",
           "system_prompt": "System prompt",
           "streaming": "Use streaming responses",
-          "show_thinking": "Show thinking process"
+          "show_thinking": "Show thinking process",
+          "model_to_pull": "Download a new model"
         },
         "data_description": {
           "streaming": "Enable for token-by-token streaming. Disable for a single response (simpler but you wait for the full reply).",
-          "show_thinking": "When enabled, reasoning inside &lt;think&gt; tags will be included in the response. Disable to return only the final answer."
+          "show_thinking": "When enabled, reasoning inside &lt;think&gt; tags will be included in the response. Disable to return only the final answer.",
+          "model_to_pull": "Select a model to download from the list, or type a name manually."
         }
       }
     }

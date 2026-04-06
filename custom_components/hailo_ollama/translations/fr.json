@@ -16,17 +16,26 @@
           "model": "Modèle",
           "system_prompt": "Invite système",
           "streaming": "Utiliser les réponses en streaming",
-          "show_thinking": "Afficher le processus de réflexion"
+          "show_thinking": "Afficher le processus de réflexion",
+          "model_to_pull": "Télécharger un nouveau modèle"
         },
         "data_description": {
-          "streaming": "Activez pour recevoir les tokens au fur et à mesure. Désactivez pour obtenir une réponse unique (plus simple, mais vous attendez la réponse complète).",
-          "show_thinking": "Lorsqu'activé, le raisonnement contenu dans les balises &lt;think&gt; sera inclus dans la réponse. Désactivez pour ne renvoyer que la réponse finale."
+          "streaming": "Activez pour recevoir les tokens au fur et à mesure. Désactivez pour obtenir une réponse unique.",
+          "show_thinking": "Lorsqu'activé, le raisonnement contenu dans les balises &lt;think&gt; sera inclus dans la réponse. Désactivez pour ne renvoyer que la réponse finale.",
+          "model_to_pull": "Sélectionnez un modèle dans la liste à télécharger ou saisissez un nom manuellement."
         }
       }
     },
     "error": {
       "cannot_connect": "Impossible de se connecter à Hailo-Ollama",
-      "no_models": "Aucun modèle trouvé sur l'appareil"
+      "no_models": "Aucun modèle trouvé sur l'appareil",
+      "pull_failed": "Échec du téléchargement du modèle"
+    }
+  },
+  "entity": {
+    "sensor": {
+      "response_time": {"name": "Temps de réponse"},
+      "response_chars": {"name": "Caractères de réponse"}
     }
   },
   "options": {
@@ -38,11 +47,13 @@
           "model": "Modèle",
           "system_prompt": "Invite système",
           "streaming": "Utiliser les réponses en streaming",
-          "show_thinking": "Afficher le processus de réflexion"
+          "show_thinking": "Afficher le processus de réflexion",
+          "model_to_pull": "Télécharger un nouveau modèle"
         },
         "data_description": {
-          "streaming": "Activez pour recevoir les tokens au fur et à mesure. Désactivez pour obtenir une réponse unique (plus simple, mais vous attendez la réponse complète).",
-          "show_thinking": "Lorsqu'activé, le raisonnement contenu dans les balises &lt;think&gt; sera inclus dans la réponse. Désactivez pour ne renvoyer que la réponse finale."
+          "streaming": "Activez pour recevoir les tokens au fur et à mesure. Désactivez pour obtenir une réponse unique.",
+          "show_thinking": "Lorsqu'activé, le raisonnement contenu dans les balises &lt;think&gt; sera inclus dans la réponse. Désactivez pour ne renvoyer que la réponse finale.",
+          "model_to_pull": "Sélectionnez un modèle dans la liste à télécharger ou saisissez un nom manuellement."
         }
       }
     }

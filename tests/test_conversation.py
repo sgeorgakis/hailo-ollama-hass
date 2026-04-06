@@ -800,3 +800,34 @@ async def test_call_streaming_last_chunk_has_full_content():
 
     # The last chunk's full content is returned directly, not concatenated
     assert result == "Hello, full response!"
+
+
+# ---------------------------------------------------------------------------
+# Availability
+# ---------------------------------------------------------------------------
+
+
+def test_available_defaults_to_true_when_no_domain_data(mock_config_entry):
+    """available returns True when hass.data has no domain entry."""
+    entity = HailoOllamaConversationEntity(mock_config_entry)
+    hass = MagicMock()
+    hass.data = {}
+    entity.hass = hass
+    assert entity.available is True
+
+
+def test_available_reads_from_domain_data(mock_config_entry):
+    """available reflects the value stored in hass.data[DOMAIN][entry_id]."""
+    entity = HailoOllamaConversationEntity(mock_config_entry)
+    hass = MagicMock()
+    hass.data = {DOMAIN: {mock_config_entry.entry_id: {"available": False}}}
+    entity.hass = hass
+    assert entity.available is False
+
+
+def test_available_true_when_domain_data_says_available(mock_config_entry):
+    entity = HailoOllamaConversationEntity(mock_config_entry)
+    hass = MagicMock()
+    hass.data = {DOMAIN: {mock_config_entry.entry_id: {"available": True}}}
+    entity.hass = hass
+    assert entity.available is True

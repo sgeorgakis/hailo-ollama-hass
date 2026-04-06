@@ -12,3 +12,6 @@ DEFAULT_SYSTEM_PROMPT = "You are a helpful smart home assistant. Be concise."
 DEFAULT_STREAMING = True
 DEFAULT_SHOW_THINKING = False
 DEFAULT_TIMEOUT = 500
+HEALTH_CHECK_INTERVAL = 60
+SIGNAL_METRICS_UPDATED = "hailo_ollama_metrics_{}"
+SIGNAL_AVAILABILITY_CHANGED = "hailo_ollama_availability_{}"

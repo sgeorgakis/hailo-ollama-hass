@@ -16,6 +16,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import intent
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
+from homeassistant.helpers.dispatcher import async_dispatcher_connect, async_dispatcher_send
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from .const import (
@@ -30,6 +31,8 @@ from .const import (
     DEFAULT_SYSTEM_PROMPT,
     DEFAULT_TIMEOUT,
     DOMAIN,
+    SIGNAL_AVAILABILITY_CHANGED,
+    SIGNAL_METRICS_UPDATED,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -214,8 +217,9 @@ class HailoOllamaClientMixin:
         if not chunks:
             raise HailoError("Streaming returned 0 chunks")
 
-        # Last done=true chunk has full content on some server versions
         last = chunks[-1]
+
+        # Last done=true chunk has full content on some server versions
         if last.get("done") and last.get("message", {}).get("content"):
             return last["message"]["content"]
 
@@ -262,6 +266,28 @@ class HailoOllamaConversationEntity(
         self._attr_unique_id = entry.entry_id
         self._base_url = f"http://{self._host}:{self._port}"
         self._conversations: dict[str, list[dict[str, Any]]] = {}
+
+    async def async_added_to_hass(self) -> None:
+        """Subscribe to availability changes."""
+        self.async_on_remove(
+            async_dispatcher_connect(
+                self.hass,
+                SIGNAL_AVAILABILITY_CHANGED.format(self._entry.entry_id),
+                self._handle_availability,
+            )
+        )
+
+    def _handle_availability(self, available: bool) -> None:
+        self.async_write_ha_state()
+
+    @property
+    def available(self) -> bool:
+        """Return True when the Hailo-Ollama server is reachable."""
+        return (
+            self.hass.data.get(DOMAIN, {})
+            .get(self._entry.entry_id, {})
+            .get("available", True)
+        )
 
     @property
     def supported_languages(self) -> str:
@@ -325,11 +351,13 @@ class HailoOllamaConversationEntity(
         messages.append(user_message)
 
         # Call Hailo with configured mode
+        success = False
         try:
             if self._streaming:
                 response_text = await self._call_streaming(messages)
             else:
                 response_text = await self._call_non_streaming(messages)
+            success = True
         except HailoError as err:
             _LOGGER.error("Hailo error: %s", err)
             response_text = f"Sorry, I encountered an error: {err}"
@@ -337,6 +365,12 @@ class HailoOllamaConversationEntity(
         elapsed = time.monotonic() - t0
 
         clean_text = _process_thinking(response_text, self._show_thinking)
+        if success:
+            async_dispatcher_send(
+                self.hass,
+                SIGNAL_METRICS_UPDATED.format(self._entry.entry_id),
+                {"response_time": round(elapsed, 2), "response_chars": len(clean_text)},
+            )
         if clean_text != response_text.strip():
             _LOGGER.debug(
                 "Processed <think> tags: %d → %d chars",

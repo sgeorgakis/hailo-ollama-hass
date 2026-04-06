@@ -16,17 +16,26 @@
           "model": "Modello",
           "system_prompt": "Istruzione di sistema",
           "streaming": "Usa risposte in streaming",
-          "show_thinking": "Mostra il processo di ragionamento"
+          "show_thinking": "Mostra il processo di ragionamento",
+          "model_to_pull": "Scarica un nuovo modello"
         },
         "data_description": {
-          "streaming": "Attiva per ricevere i token in modo progressivo. Disattiva per ricevere un'unica risposta completa (più semplice, ma dovrai attendere la risposta intera).",
-          "show_thinking": "Se attivato, il ragionamento all'interno dei tag &lt;think&gt; verrà incluso nella risposta. Disattiva per restituire solo la risposta finale."
+          "streaming": "Attiva per ricevere i token in modo progressivo. Disattiva per ricevere un'unica risposta completa.",
+          "show_thinking": "Se attivato, il ragionamento all'interno dei tag &lt;think&gt; verrà incluso nella risposta. Disattiva per restituire solo la risposta finale.",
+          "model_to_pull": "Seleziona un modello dalla lista da scaricare o digita un nome manualmente."
         }
       }
     },
     "error": {
       "cannot_connect": "Impossibile connettersi a Hailo-Ollama",
-      "no_models": "Nessun modello trovato sul dispositivo"
+      "no_models": "Nessun modello trovato sul dispositivo",
+      "pull_failed": "Impossibile scaricare il modello"
+    }
+  },
+  "entity": {
+    "sensor": {
+      "response_time": {"name": "Tempo di risposta"},
+      "response_chars": {"name": "Caratteri di risposta"}
     }
   },
   "options": {
@@ -38,11 +47,13 @@
           "model": "Modello",
           "system_prompt": "Istruzione di sistema",
           "streaming": "Usa risposte in streaming",
-          "show_thinking": "Mostra il processo di ragionamento"
+          "show_thinking": "Mostra il processo di ragionamento",
+          "model_to_pull": "Scarica un nuovo modello"
         },
         "data_description": {
-          "streaming": "Attiva per ricevere i token in modo progressivo. Disattiva per ricevere un'unica risposta completa (più semplice, ma dovrai attendere la risposta intera).",
-          "show_thinking": "Se attivato, il ragionamento all'interno dei tag &lt;think&gt; verrà incluso nella risposta. Disattiva per restituire solo la risposta finale."
+          "streaming": "Attiva per ricevere i token in modo progressivo. Disattiva per ricevere un'unica risposta completa.",
+          "show_thinking": "Se attivato, il ragionamento all'interno dei tag &lt;think&gt; verrà incluso nella risposta. Disattiva per restituire solo la risposta finale.",
+          "model_to_pull": "Seleziona un modello dalla lista da scaricare o digita un nome manualmente."
         }
       }
     }

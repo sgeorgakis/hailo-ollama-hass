@@ -16,6 +16,8 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
+from homeassistant.helpers.dispatcher import async_dispatcher_connect
+
 from .const import (
     CONF_HOST,
     CONF_MODEL,
@@ -27,6 +29,7 @@ from .const import (
     DEFAULT_STREAMING,
     DEFAULT_SYSTEM_PROMPT,
     DOMAIN,
+    SIGNAL_AVAILABILITY_CHANGED,
 )
 from .conversation import HailoError, HailoOllamaClientMixin, _process_thinking
 
@@ -67,6 +70,28 @@ class HailoAITaskEntity(AITaskEntity, HailoOllamaClientMixin):
         )
         self._attr_unique_id = f"{entry.entry_id}_ai_task"
         self._base_url = f"http://{self._host}:{self._port}"
+
+    async def async_added_to_hass(self) -> None:
+        """Subscribe to availability changes."""
+        self.async_on_remove(
+            async_dispatcher_connect(
+                self.hass,
+                SIGNAL_AVAILABILITY_CHANGED.format(self._entry.entry_id),
+                self._handle_availability,
+            )
+        )
+
+    def _handle_availability(self, available: bool) -> None:
+        self.async_write_ha_state()
+
+    @property
+    def available(self) -> bool:
+        """Return True when the Hailo-Ollama server is reachable."""
+        return (
+            self.hass.data.get(DOMAIN, {})
+            .get(self._entry.entry_id, {})
+            .get("available", True)
+        )
 
     @property
     def device_info(self) -> dict[str, Any]:

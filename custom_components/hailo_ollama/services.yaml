@@ -1,0 +1,32 @@
+list_models:
+  name: List Models
+  description: Return the list of models available on the Hailo-Ollama server.
+  fields:
+    config_entry_id:
+      name: Config entry ID
+      description: ID of the Hailo Ollama config entry to use. Defaults to the first configured entry.
+      required: false
+      example: "abc123def456"
+      selector:
+        config_entry:
+          integration: hailo_ollama
+
+pull_model:
+  name: Pull Model
+  description: Download a model on the Hailo-Ollama server.
+  fields:
+    model:
+      name: Model
+      description: Name of the model to pull (e.g. "llama3.2:3b").
+      required: true
+      example: "llama3.2:3b"
+      selector:
+        text:
+    config_entry_id:
+      name: Config entry ID
+      description: ID of the Hailo Ollama config entry to use. Defaults to the first configured entry.
+      required: false
+      example: "abc123def456"
+      selector:
+        config_entry:
+          integration: hailo_ollama

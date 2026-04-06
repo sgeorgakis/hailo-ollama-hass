@@ -29,6 +29,39 @@
       "no_models": "No models found on device"
     }
   },
+  "services": {
+    "list_models": {
+      "name": "List Models",
+      "description": "Returns the list of models available on the Hailo-Ollama server.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Config entry ID",
+          "description": "ID of the Hailo Ollama integration entry to query. Defaults to the first configured entry."
+        }
+      }
+    },
+    "pull_model": {
+      "name": "Pull Model",
+      "description": "Downloads a model to the Hailo-Ollama server.",
+      "fields": {
+        "model": {
+          "name": "Model",
+          "description": "Model name to pull, e.g. 'llama3.2:3b'."
+        },
+        "config_entry_id": {
+          "name": "Config entry ID",
+          "description": "ID of the Hailo Ollama integration entry to use. Defaults to the first configured entry."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "response_time": {"name": "Response Time"},
+      "tokens_per_second": {"name": "Tokens per Second"},
+      "token_count": {"name": "Token Count"}
+    }
+  },
   "options": {
     "step": {
       "init": {
