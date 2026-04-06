@@ -16,17 +16,20 @@
           "model": "Modelo",
           "system_prompt": "Instrução do sistema",
           "streaming": "Usar respostas em streaming",
-          "show_thinking": "Mostrar processo de raciocínio"
+          "show_thinking": "Mostrar processo de raciocínio",
+          "pull_model_name": "Baixar novo modelo"
         },
         "data_description": {
           "streaming": "Ative para receber tokens de forma progressiva. Desative para receber uma única resposta completa (mais simples, mas você precisará aguardar a resposta inteira).",
-          "show_thinking": "Quando ativado, o raciocínio dentro das tags &lt;think&gt; será incluído na resposta. Desative para retornar apenas a resposta final."
+          "show_thinking": "Quando ativado, o raciocínio dentro das tags &lt;think&gt; será incluído na resposta. Desative para retornar apenas a resposta final.",
+          "pull_model_name": "Digite um nome de modelo (ex. llama3.2:3b) para baixá-lo antes de selecionar. Deixe vazio para ignorar."
         }
       }
     },
     "error": {
       "cannot_connect": "Não foi possível conectar ao Hailo-Ollama",
-      "no_models": "Nenhum modelo encontrado no dispositivo"
+      "no_models": "Nenhum modelo encontrado no dispositivo",
+      "pull_failed": "Falha ao baixar o modelo"
     }
   },
   "entity": {
@@ -44,11 +47,13 @@
           "model": "Modelo",
           "system_prompt": "Instrução do sistema",
           "streaming": "Usar respostas em streaming",
-          "show_thinking": "Mostrar processo de raciocínio"
+          "show_thinking": "Mostrar processo de raciocínio",
+          "pull_model_name": "Baixar novo modelo"
         },
         "data_description": {
           "streaming": "Ative para receber tokens de forma progressiva. Desative para receber uma única resposta completa (mais simples, mas você precisará aguardar a resposta inteira).",
-          "show_thinking": "Quando ativado, o raciocínio dentro das tags &lt;think&gt; será incluído na resposta. Desative para retornar apenas a resposta final."
+          "show_thinking": "Quando ativado, o raciocínio dentro das tags &lt;think&gt; será incluído na resposta. Desative para retornar apenas a resposta final.",
+          "pull_model_name": "Digite um nome de modelo (ex. llama3.2:3b) para baixá-lo antes de selecionar. Deixe vazio para ignorar."
         }
       }
     }

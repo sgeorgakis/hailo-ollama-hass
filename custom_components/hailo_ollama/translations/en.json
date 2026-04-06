@@ -16,17 +16,20 @@
           "model": "Model",
           "system_prompt": "System prompt",
           "streaming": "Use streaming responses",
-          "show_thinking": "Show thinking process"
+          "show_thinking": "Show thinking process",
+          "pull_model_name": "Pull a new model"
         },
         "data_description": {
           "streaming": "Enable for token-by-token streaming. Disable for a single response (simpler but you wait for the full reply).",
-          "show_thinking": "When enabled, reasoning inside &lt;think&gt; tags will be included in the response. Disable to return only the final answer."
+          "show_thinking": "When enabled, reasoning inside &lt;think&gt; tags will be included in the response. Disable to return only the final answer.",
+          "pull_model_name": "Enter a model name (e.g. llama3.2:3b) to download it before selecting. Leave empty to skip."
         }
       }
     },
     "error": {
       "cannot_connect": "Cannot connect to Hailo-Ollama",
-      "no_models": "No models found on device"
+      "no_models": "No models found on device",
+      "pull_failed": "Failed to pull model"
     }
   },
   "entity": {
@@ -44,11 +47,13 @@
           "model": "Model",
           "system_prompt": "System prompt",
           "streaming": "Use streaming responses",
-          "show_thinking": "Show thinking process"
+          "show_thinking": "Show thinking process",
+          "pull_model_name": "Pull a new model"
         },
         "data_description": {
           "streaming": "Enable for token-by-token streaming. Disable for a single response (simpler but you wait for the full reply).",
-          "show_thinking": "When enabled, reasoning inside &lt;think&gt; tags will be included in the response. Disable to return only the final answer."
+          "show_thinking": "When enabled, reasoning inside &lt;think&gt; tags will be included in the response. Disable to return only the final answer.",
+          "pull_model_name": "Enter a model name (e.g. llama3.2:3b) to download it before selecting. Leave empty to skip."
         }
       }
     }

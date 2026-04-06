@@ -373,6 +373,147 @@ async def test_options_flow_saves_entry(mock_hass):
 
 
 @pytest.mark.asyncio
+async def test_pick_model_pull_success_refreshes_models(mock_hass):
+    """Filling pull_model_name triggers a pull and re-shows the form with updated models."""
+    from custom_components.hailo_ollama.config_flow import CONF_PULL_MODEL_NAME
+
+    flow = HailoOllamaConfigFlow()
+    flow.hass = mock_hass
+    flow._host = "localhost"
+    flow._port = 8000
+    flow._models = ["old-model"]
+
+    # Mock pull returning success
+    pull_chunks = [
+        b'{"status":"pulling"}\n',
+        b'{"status":"success"}\n',
+    ]
+
+    async def fake_pull_iter():
+        for chunk in pull_chunks:
+            yield chunk
+
+    pull_resp = AsyncMock()
+    pull_resp.status = 200
+    pull_resp.content.iter_any = fake_pull_iter
+
+    # Mock model refresh returning new list
+    tags_resp = AsyncMock()
+    tags_resp.status = 200
+    tags_resp.json = AsyncMock(return_value={"models": [{"name": "old-model"}, {"name": "new-model"}]})
+
+    session = MagicMock()
+    session.post = MagicMock(
+        return_value=AsyncMock(__aenter__=AsyncMock(return_value=pull_resp))
+    )
+    session.get = MagicMock(
+        return_value=AsyncMock(__aenter__=AsyncMock(return_value=tags_resp))
+    )
+
+    flow.async_show_form = MagicMock(return_value={"type": "form", "step_id": "pick_model"})
+
+    with patch(
+        "custom_components.hailo_ollama.config_flow.async_get_clientsession",
+        return_value=session,
+    ):
+        result = await flow.async_step_pick_model({
+            CONF_PULL_MODEL_NAME: "new-model",
+            CONF_MODEL: "old-model",
+        })
+
+    assert flow._models == ["old-model", "new-model"]
+    flow.async_show_form.assert_called_once()
+    call_kwargs = flow.async_show_form.call_args.kwargs
+    assert call_kwargs.get("errors") == {}
+
+
+@pytest.mark.asyncio
+async def test_pick_model_pull_failure_shows_error(mock_hass):
+    """A pull failure sets pull_failed error and re-shows the form."""
+    from custom_components.hailo_ollama.config_flow import CONF_PULL_MODEL_NAME
+
+    flow = HailoOllamaConfigFlow()
+    flow.hass = mock_hass
+    flow._host = "localhost"
+    flow._port = 8000
+    flow._models = ["old-model"]
+
+    pull_resp = AsyncMock()
+    pull_resp.status = 500
+    pull_resp.text = AsyncMock(return_value="Internal Server Error")
+
+    session = MagicMock()
+    session.post = MagicMock(
+        return_value=AsyncMock(__aenter__=AsyncMock(return_value=pull_resp))
+    )
+
+    flow.async_show_form = MagicMock(return_value={"type": "form", "step_id": "pick_model"})
+
+    with patch(
+        "custom_components.hailo_ollama.config_flow.async_get_clientsession",
+        return_value=session,
+    ):
+        await flow.async_step_pick_model({
+            CONF_PULL_MODEL_NAME: "bad-model",
+            CONF_MODEL: "old-model",
+        })
+
+    call_kwargs = flow.async_show_form.call_args.kwargs
+    assert call_kwargs["errors"].get(CONF_PULL_MODEL_NAME) == "pull_failed"
+
+
+@pytest.mark.asyncio
+async def test_options_flow_pull_success_refreshes_models(mock_hass):
+    """Pull in options flow refreshes model list and re-shows the form."""
+    from custom_components.hailo_ollama.config_flow import CONF_PULL_MODEL_NAME
+
+    flow = _make_options_flow(mock_hass, {
+        CONF_HOST: "localhost",
+        CONF_PORT: 8000,
+        CONF_MODEL: "old-model",
+        CONF_SYSTEM_PROMPT: DEFAULT_SYSTEM_PROMPT,
+        CONF_STREAMING: True,
+    })
+    flow._models = ["old-model"]
+
+    pull_chunks = [b'{"status":"success"}\n']
+
+    async def fake_pull_iter():
+        for chunk in pull_chunks:
+            yield chunk
+
+    pull_resp = AsyncMock()
+    pull_resp.status = 200
+    pull_resp.content.iter_any = fake_pull_iter
+
+    tags_resp = AsyncMock()
+    tags_resp.status = 200
+    tags_resp.json = AsyncMock(return_value={"models": [{"name": "old-model"}, {"name": "new-model"}]})
+
+    session = MagicMock()
+    session.post = MagicMock(
+        return_value=AsyncMock(__aenter__=AsyncMock(return_value=pull_resp))
+    )
+    session.get = MagicMock(
+        return_value=AsyncMock(__aenter__=AsyncMock(return_value=tags_resp))
+    )
+
+    flow.async_show_form = MagicMock(return_value={"type": "form", "step_id": "init"})
+
+    with patch(
+        "custom_components.hailo_ollama.config_flow.async_get_clientsession",
+        return_value=session,
+    ):
+        await flow.async_step_init({
+            CONF_PULL_MODEL_NAME: "new-model",
+            CONF_MODEL: "old-model",
+        })
+
+    assert flow._models == ["old-model", "new-model"]
+    flow.async_show_form.assert_called_once()
+
+
+@pytest.mark.asyncio
 async def test_options_flow_fetches_models(mock_hass):
     """Options flow fetches models from /api/tags when _models is empty."""
     flow = _make_options_flow(mock_hass, {

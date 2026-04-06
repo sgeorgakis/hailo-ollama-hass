@@ -16,17 +16,20 @@
           "model": "Modell",
           "system_prompt": "Systemaufforderung",
           "streaming": "Streaming-Antworten verwenden",
-          "show_thinking": "Denkprozess anzeigen"
+          "show_thinking": "Denkprozess anzeigen",
+          "pull_model_name": "Neues Modell herunterladen"
         },
         "data_description": {
           "streaming": "Aktivieren für Token-für-Token-Streaming. Deaktivieren für eine einzelne Antwort (einfacher, aber Sie warten auf die vollständige Antwort).",
-          "show_thinking": "Wenn aktiviert, wird der Denkprozess innerhalb von &lt;think&gt;-Tags in der Antwort angezeigt. Deaktivieren, um nur die endgültige Antwort zurückzugeben."
+          "show_thinking": "Wenn aktiviert, wird der Denkprozess innerhalb von &lt;think&gt;-Tags in der Antwort angezeigt. Deaktivieren, um nur die endgültige Antwort zurückzugeben.",
+          "pull_model_name": "Modellnamen eingeben (z.B. llama3.2:3b), um es vor der Auswahl herunterzuladen. Leer lassen zum Überspringen."
         }
       }
     },
     "error": {
       "cannot_connect": "Verbindung zu Hailo-Ollama nicht möglich",
-      "no_models": "Keine Modelle auf dem Gerät gefunden"
+      "no_models": "Keine Modelle auf dem Gerät gefunden",
+      "pull_failed": "Modell konnte nicht heruntergeladen werden"
     }
   },
   "entity": {
@@ -44,11 +47,13 @@
           "model": "Modell",
           "system_prompt": "Systemaufforderung",
           "streaming": "Streaming-Antworten verwenden",
-          "show_thinking": "Denkprozess anzeigen"
+          "show_thinking": "Denkprozess anzeigen",
+          "pull_model_name": "Neues Modell herunterladen"
         },
         "data_description": {
           "streaming": "Aktivieren für Token-für-Token-Streaming. Deaktivieren für eine einzelne Antwort (einfacher, aber Sie warten auf die vollständige Antwort).",
-          "show_thinking": "Wenn aktiviert, wird der Denkprozess innerhalb von &lt;think&gt;-Tags in der Antwort angezeigt. Deaktivieren, um nur die endgültige Antwort zurückzugeben."
+          "show_thinking": "Wenn aktiviert, wird der Denkprozess innerhalb von &lt;think&gt;-Tags in der Antwort angezeigt. Deaktivieren, um nur die endgültige Antwort zurückzugeben.",
+          "pull_model_name": "Modellnamen eingeben (z.B. llama3.2:3b), um es vor der Auswahl herunterzuladen. Leer lassen zum Überspringen."
         }
       }
     }
