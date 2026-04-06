@@ -79,6 +79,12 @@ async def _pull_model(
         return False, str(err)
     except TimeoutError:
         return False, "Request timed out"
+    except aiohttp.ClientPayloadError as err:
+        # The Hailo-Ollama server sometimes sends a malformed transfer-encoding
+        # footer after the model data is fully written. The download succeeded;
+        # treat this as a non-fatal error.
+        _LOGGER.warning("Ignoring payload error after pull (model likely downloaded): %s", err)
+        return True, last_status or "success"
     except aiohttp.ClientError as err:
         return False, str(err)
     return True, last_status

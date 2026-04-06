@@ -196,6 +196,32 @@ async def test_fetch_models_both_fail(config_flow):
 
 
 # ---------------------------------------------------------------------------
+# _pull_model
+# ---------------------------------------------------------------------------
+
+@pytest.mark.asyncio
+async def test_pull_model_payload_error_treated_as_success():
+    """ClientPayloadError (e.g. TransferEncodingError) during pull is treated as success."""
+    import aiohttp
+    from custom_components.hailo_ollama.config_flow import _pull_model
+
+    async def fake_iter():
+        yield b'{"status":"pulling"}\n'
+        raise aiohttp.ClientPayloadError("Not enough data to satisfy transfer length header.")
+
+    pull_resp = AsyncMock()
+    pull_resp.status = 200
+    pull_resp.content.iter_any = fake_iter
+
+    session = MagicMock()
+    session.post = MagicMock(return_value=AsyncMock(__aenter__=AsyncMock(return_value=pull_resp)))
+
+    success, status = await _pull_model(session, "localhost", 8000, "qwen2:1.5b")
+
+    assert success is True
+
+
+# ---------------------------------------------------------------------------
 # async_step_user
 # ---------------------------------------------------------------------------
 
