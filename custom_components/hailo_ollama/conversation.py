@@ -269,9 +269,9 @@ class HailoOllamaConversationEntity(
         self._conversations: dict[str, list[dict[str, Any]]] = {}
 
     @property
-    def supported_languages(self) -> list[str]:
+    def supported_languages(self) -> str:
         """Return supported languages."""
-        return ["en"]
+        return conversation.MATCH_ALL
 
     @property
     def device_info(self) -> dict[str, Any]:

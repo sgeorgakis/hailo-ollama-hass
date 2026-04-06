@@ -15,6 +15,7 @@ from custom_components.hailo_ollama.const import (
     DEFAULT_SYSTEM_PROMPT,
     DOMAIN,
 )
+from homeassistant.components import conversation
 from custom_components.hailo_ollama.conversation import (
     HailoError,
     HailoOllamaConversationEntity,
@@ -84,7 +85,7 @@ def test_conversation_entity_properties(mock_config_entry):
     """Test conversation entity properties."""
     entity = HailoOllamaConversationEntity(mock_config_entry)
 
-    assert entity.supported_languages == ["en"]
+    assert entity.supported_languages == conversation.MATCH_ALL
     assert entity.device_info == {
         "identifiers": {(DOMAIN, "test_entry_id")},
         "name": "Hailo Ollama (llama3.2:3b)",
