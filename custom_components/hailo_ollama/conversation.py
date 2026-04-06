@@ -16,6 +16,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import intent
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
+from homeassistant.helpers.dispatcher import async_dispatcher_send
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from .const import (
@@ -30,6 +31,7 @@ from .const import (
     DEFAULT_SYSTEM_PROMPT,
     DEFAULT_TIMEOUT,
     DOMAIN,
+    SIGNAL_METRICS_UPDATED,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -141,6 +143,11 @@ class HailoOllamaClientMixin:
                 f"Raw: {json.dumps(data)[:300]}"
             )
 
+        self._last_metrics = {
+            "eval_count": data.get("eval_count", 0),
+            "eval_duration": data.get("eval_duration", 0),
+            "total_duration": data.get("total_duration", 0),
+        }
         return content
 
     async def _call_streaming(
@@ -214,8 +221,14 @@ class HailoOllamaClientMixin:
         if not chunks:
             raise HailoError("Streaming returned 0 chunks")
 
-        # Last done=true chunk has full content on some server versions
         last = chunks[-1]
+        self._last_metrics = {
+            "eval_count": last.get("eval_count", 0),
+            "eval_duration": last.get("eval_duration", 0),
+            "total_duration": last.get("total_duration", 0),
+        }
+
+        # Last done=true chunk has full content on some server versions
         if last.get("done") and last.get("message", {}).get("content"):
             return last["message"]["content"]
 
@@ -262,6 +275,7 @@ class HailoOllamaConversationEntity(
         self._attr_unique_id = entry.entry_id
         self._base_url = f"http://{self._host}:{self._port}"
         self._conversations: dict[str, list[dict[str, Any]]] = {}
+        self._last_metrics: dict[str, int] = {}
 
     @property
     def supported_languages(self) -> str:
@@ -330,6 +344,11 @@ class HailoOllamaConversationEntity(
                 response_text = await self._call_streaming(messages)
             else:
                 response_text = await self._call_non_streaming(messages)
+            async_dispatcher_send(
+                self.hass,
+                SIGNAL_METRICS_UPDATED.format(self._entry.entry_id),
+                dict(self._last_metrics),
+            )
         except HailoError as err:
             _LOGGER.error("Hailo error: %s", err)
             response_text = f"Sorry, I encountered an error: {err}"

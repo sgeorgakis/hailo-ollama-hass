@@ -12,3 +12,4 @@ DEFAULT_SYSTEM_PROMPT = "You are a helpful smart home assistant. Be concise."
 DEFAULT_STREAMING = True
 DEFAULT_SHOW_THINKING = False
 DEFAULT_TIMEOUT = 500
+SIGNAL_METRICS_UPDATED = "hailo_ollama_metrics_{}"
