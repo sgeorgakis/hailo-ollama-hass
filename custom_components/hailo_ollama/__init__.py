@@ -21,6 +21,7 @@ from .const import (
     HEALTH_CHECK_INTERVAL,
     SIGNAL_AVAILABILITY_CHANGED,
 )
+from .services import async_register_services, async_unregister_services
 
 PLATFORMS = [Platform.CONVERSATION, Platform.AI_TASK, Platform.SENSOR]
 
@@ -35,6 +36,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     entry.async_on_unload(entry.add_update_listener(_async_update_listener))
+    async_register_services(hass)
 
     async def _health_check(_now=None) -> None:
         host = entry.data[CONF_HOST]
@@ -82,4 +84,5 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     unloaded = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
     if unloaded:
         hass.data[DOMAIN].pop(entry.entry_id, None)
+        async_unregister_services(hass)
     return unloaded
