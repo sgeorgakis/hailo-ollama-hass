@@ -399,8 +399,8 @@ async def test_pick_model_shows_downloadable_models_inline(mock_hass):
 
 
 @pytest.mark.asyncio
-async def test_pick_model_no_download_field_when_all_installed(mock_hass):
-    """pick_model form omits model_to_pull when no new models are available."""
+async def test_pick_model_download_field_always_present(mock_hass):
+    """pick_model form always includes model_to_pull even when no new models are available."""
     from custom_components.hailo_ollama.config_flow import CONF_MODEL_TO_PULL
 
     flow = HailoOllamaConfigFlow()
@@ -416,7 +416,7 @@ async def test_pick_model_no_download_field_when_all_installed(mock_hass):
 
     call_kwargs = flow.async_show_form.call_args.kwargs
     schema_keys = [getattr(k, "schema", k) for k in call_kwargs["data_schema"].schema]
-    assert CONF_MODEL_TO_PULL not in schema_keys
+    assert CONF_MODEL_TO_PULL in schema_keys
 
 
 @pytest.mark.asyncio

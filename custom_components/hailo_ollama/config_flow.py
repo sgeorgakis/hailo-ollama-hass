@@ -267,10 +267,13 @@ class HailoOllamaConfigFlow(ConfigFlow, domain=DOMAIN):
                 CONF_SHOW_THINKING, default=DEFAULT_SHOW_THINKING
             ): bool,
         }
-        if downloadable:
-            schema[vol.Optional(CONF_MODEL_TO_PULL)] = SelectSelector(
-                SelectSelectorConfig(mode=SelectSelectorMode.DROPDOWN, options=downloadable)
+        schema[vol.Optional(CONF_MODEL_TO_PULL)] = SelectSelector(
+            SelectSelectorConfig(
+                mode=SelectSelectorMode.DROPDOWN,
+                options=downloadable,
+                custom_value=True,
             )
+        )
 
         return self.async_show_form(
             step_id="pick_model",
@@ -384,10 +387,13 @@ class HailoOllamaOptionsFlow(OptionsFlow):
                 default=current.get(CONF_SHOW_THINKING, DEFAULT_SHOW_THINKING),
             ): bool,
         }
-        if downloadable:
-            schema[vol.Optional(CONF_MODEL_TO_PULL)] = SelectSelector(
-                SelectSelectorConfig(mode=SelectSelectorMode.DROPDOWN, options=downloadable)
+        schema[vol.Optional(CONF_MODEL_TO_PULL)] = SelectSelector(
+            SelectSelectorConfig(
+                mode=SelectSelectorMode.DROPDOWN,
+                options=downloadable,
+                custom_value=True,
             )
+        )
 
         return self.async_show_form(
             step_id="init",

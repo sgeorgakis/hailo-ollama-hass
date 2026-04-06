@@ -22,7 +22,7 @@
         "data_description": {
           "streaming": "Attiva per ricevere i token in modo progressivo. Disattiva per ricevere un'unica risposta completa.",
           "show_thinking": "Se attivato, il ragionamento all'interno dei tag &lt;think&gt; verrà incluso nella risposta. Disattiva per restituire solo la risposta finale.",
-          "model_to_pull": "Seleziona un modello da scaricare. Vengono mostrati solo i modelli non ancora installati."
+          "model_to_pull": "Seleziona un modello dalla lista da scaricare o digita un nome manualmente."
         }
       }
     },
@@ -53,7 +53,7 @@
         "data_description": {
           "streaming": "Attiva per ricevere i token in modo progressivo. Disattiva per ricevere un'unica risposta completa.",
           "show_thinking": "Se attivato, il ragionamento all'interno dei tag &lt;think&gt; verrà incluso nella risposta. Disattiva per restituire solo la risposta finale.",
-          "model_to_pull": "Seleziona un modello da scaricare. Vengono mostrati solo i modelli non ancora installati."
+          "model_to_pull": "Seleziona un modello dalla lista da scaricare o digita un nome manualmente."
         }
       }
     }

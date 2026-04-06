@@ -22,7 +22,7 @@
         "data_description": {
           "streaming": "Aktivieren für Token-für-Token-Streaming. Deaktivieren für eine einzelne Antwort (einfacher, aber Sie warten auf die vollständige Antwort).",
           "show_thinking": "Wenn aktiviert, wird der Denkprozess innerhalb von &lt;think&gt;-Tags in der Antwort angezeigt. Deaktivieren, um nur die endgültige Antwort zurückzugeben.",
-          "model_to_pull": "Wählen Sie ein Modell zum Herunterladen. Es werden nur noch nicht installierte Modelle angezeigt."
+          "model_to_pull": "Wählen Sie ein Modell aus der Liste zum Herunterladen oder geben Sie einen Namen manuell ein."
         }
       }
     },
@@ -53,7 +53,7 @@
         "data_description": {
           "streaming": "Aktivieren für Token-für-Token-Streaming. Deaktivieren für eine einzelne Antwort (einfacher, aber Sie warten auf die vollständige Antwort).",
           "show_thinking": "Wenn aktiviert, wird der Denkprozess innerhalb von &lt;think&gt;-Tags in der Antwort angezeigt. Deaktivieren, um nur die endgültige Antwort zurückzugeben.",
-          "model_to_pull": "Wählen Sie ein Modell zum Herunterladen. Es werden nur noch nicht installierte Modelle angezeigt."
+          "model_to_pull": "Wählen Sie ein Modell aus der Liste zum Herunterladen oder geben Sie einen Namen manuell ein."
         }
       }
     }

@@ -22,7 +22,7 @@
         "data_description": {
           "streaming": "Ative para receber tokens progressivamente. Desative para obter uma única resposta completa.",
           "show_thinking": "Quando ativado, o raciocínio dentro das etiquetas &lt;think&gt; será incluído na resposta. Desative para devolver apenas a resposta final.",
-          "model_to_pull": "Selecione um modelo para transferir. Apenas modelos ainda não instalados são apresentados."
+          "model_to_pull": "Selecione um modelo da lista para transferir ou introduza um nome manualmente."
         }
       }
     },
@@ -53,7 +53,7 @@
         "data_description": {
           "streaming": "Ative para receber tokens progressivamente. Desative para obter uma única resposta completa.",
           "show_thinking": "Quando ativado, o raciocínio dentro das etiquetas &lt;think&gt; será incluído na resposta. Desative para devolver apenas a resposta final.",
-          "model_to_pull": "Selecione um modelo para transferir. Apenas modelos ainda não instalados são apresentados."
+          "model_to_pull": "Selecione um modelo da lista para transferir ou introduza um nome manualmente."
         }
       }
     }

@@ -22,7 +22,7 @@
         "data_description": {
           "streaming": "Enable for token-by-token streaming. Disable for a single response (simpler but you wait for the full reply).",
           "show_thinking": "When enabled, reasoning inside &lt;think&gt; tags will be included in the response. Disable to return only the final answer.",
-          "model_to_pull": "Select a model to download. Only models not yet installed are shown."
+          "model_to_pull": "Select a model to download from the list, or type a name manually."
         }
       }
     },
@@ -53,7 +53,7 @@
         "data_description": {
           "streaming": "Enable for token-by-token streaming. Disable for a single response (simpler but you wait for the full reply).",
           "show_thinking": "When enabled, reasoning inside &lt;think&gt; tags will be included in the response. Disable to return only the final answer.",
-          "model_to_pull": "Select a model to download. Only models not yet installed are shown."
+          "model_to_pull": "Select a model to download from the list, or type a name manually."
         }
       }
     }

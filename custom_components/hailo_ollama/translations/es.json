@@ -22,7 +22,7 @@
         "data_description": {
           "streaming": "Activa para recibir tokens de forma progresiva. Desactiva para recibir una única respuesta completa.",
           "show_thinking": "Cuando está activado, el razonamiento dentro de las etiquetas &lt;think&gt; se incluirá en la respuesta. Desactiva para devolver solo la respuesta final.",
-          "model_to_pull": "Selecciona un modelo para descargar. Solo se muestran los modelos aún no instalados."
+          "model_to_pull": "Selecciona un modelo de la lista para descargar o escribe un nombre manualmente."
         }
       }
     },
@@ -53,7 +53,7 @@
         "data_description": {
           "streaming": "Activa para recibir tokens de forma progresiva. Desactiva para recibir una única respuesta completa.",
           "show_thinking": "Cuando está activado, el razonamiento dentro de las etiquetas &lt;think&gt; se incluirá en la respuesta. Desactiva para devolver solo la respuesta final.",
-          "model_to_pull": "Selecciona un modelo para descargar. Solo se muestran los modelos aún no instalados."
+          "model_to_pull": "Selecciona un modelo de la lista para descargar o escribe un nombre manualmente."
         }
       }
     }
