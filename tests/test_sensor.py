@@ -1,6 +1,6 @@
 """Tests for Hailo Ollama sensor entities."""
 
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -13,9 +13,8 @@ from custom_components.hailo_ollama.const import (
     SIGNAL_METRICS_UPDATED,
 )
 from custom_components.hailo_ollama.sensor import (
+    HailoResponseCharsSensor,
     HailoResponseTimeSensor,
-    HailoTokenCountSensor,
-    HailoTokensPerSecondSensor,
     async_setup_entry,
 )
 
@@ -46,8 +45,8 @@ def mock_config_entry():
 
 
 @pytest.mark.asyncio
-async def test_async_setup_entry_adds_three_sensors(mock_config_entry):
-    """async_setup_entry registers all three metric sensors."""
+async def test_async_setup_entry_adds_two_sensors(mock_config_entry):
+    """async_setup_entry registers both metric sensors."""
     hass = MagicMock()
     add_entities = MagicMock()
 
@@ -55,11 +54,10 @@ async def test_async_setup_entry_adds_three_sensors(mock_config_entry):
 
     add_entities.assert_called_once()
     entities = add_entities.call_args[0][0]
-    assert len(entities) == 3
+    assert len(entities) == 2
     types = {type(e) for e in entities}
     assert HailoResponseTimeSensor in types
-    assert HailoTokensPerSecondSensor in types
-    assert HailoTokenCountSensor in types
+    assert HailoResponseCharsSensor in types
 
 
 # ---------------------------------------------------------------------------
@@ -72,21 +70,15 @@ def test_response_time_sensor_unique_id(mock_config_entry):
     assert sensor._attr_unique_id == "test_entry_id_response_time"
 
 
-def test_tokens_per_second_sensor_unique_id(mock_config_entry):
-    sensor = HailoTokensPerSecondSensor(mock_config_entry)
-    assert sensor._attr_unique_id == "test_entry_id_tokens_per_second"
-
-
-def test_token_count_sensor_unique_id(mock_config_entry):
-    sensor = HailoTokenCountSensor(mock_config_entry)
-    assert sensor._attr_unique_id == "test_entry_id_token_count"
+def test_response_chars_sensor_unique_id(mock_config_entry):
+    sensor = HailoResponseCharsSensor(mock_config_entry)
+    assert sensor._attr_unique_id == "test_entry_id_response_chars"
 
 
 def test_sensors_start_with_no_value(mock_config_entry):
     """Sensors report None until the first metrics update."""
     assert HailoResponseTimeSensor(mock_config_entry)._attr_native_value is None
-    assert HailoTokensPerSecondSensor(mock_config_entry)._attr_native_value is None
-    assert HailoTokenCountSensor(mock_config_entry)._attr_native_value is None
+    assert HailoResponseCharsSensor(mock_config_entry)._attr_native_value is None
 
 
 # ---------------------------------------------------------------------------
@@ -94,21 +86,21 @@ def test_sensors_start_with_no_value(mock_config_entry):
 # ---------------------------------------------------------------------------
 
 
-def test_response_time_computed_from_total_duration(mock_config_entry):
+def test_response_time_set_from_response_time(mock_config_entry):
     sensor = HailoResponseTimeSensor(mock_config_entry)
-    sensor._update_from_metrics({"total_duration": 5_000_000_000})
+    sensor._update_from_metrics({"response_time": 5.0})
     assert sensor._attr_native_value == 5.0
 
 
-def test_response_time_rounds_to_two_decimals(mock_config_entry):
+def test_response_time_preserves_decimals(mock_config_entry):
     sensor = HailoResponseTimeSensor(mock_config_entry)
-    sensor._update_from_metrics({"total_duration": 1_234_567_890})
+    sensor._update_from_metrics({"response_time": 1.23})
     assert sensor._attr_native_value == 1.23
 
 
-def test_response_time_zero_total_duration_gives_none(mock_config_entry):
+def test_response_time_zero_gives_none(mock_config_entry):
     sensor = HailoResponseTimeSensor(mock_config_entry)
-    sensor._update_from_metrics({"total_duration": 0})
+    sensor._update_from_metrics({"response_time": 0})
     assert sensor._attr_native_value is None
 
 
@@ -119,60 +111,24 @@ def test_response_time_missing_key_gives_none(mock_config_entry):
 
 
 # ---------------------------------------------------------------------------
-# HailoTokensPerSecondSensor metric computation
+# HailoResponseCharsSensor metric computation
 # ---------------------------------------------------------------------------
 
 
-def test_tokens_per_second_computed_correctly(mock_config_entry):
-    sensor = HailoTokensPerSecondSensor(mock_config_entry)
-    sensor._update_from_metrics({"eval_count": 100, "eval_duration": 2_000_000_000})
-    assert sensor._attr_native_value == 50.0
+def test_response_chars_set_from_response_chars(mock_config_entry):
+    sensor = HailoResponseCharsSensor(mock_config_entry)
+    sensor._update_from_metrics({"response_chars": 256})
+    assert sensor._attr_native_value == 256
 
 
-def test_tokens_per_second_rounds_to_one_decimal(mock_config_entry):
-    sensor = HailoTokensPerSecondSensor(mock_config_entry)
-    sensor._update_from_metrics({"eval_count": 113, "eval_duration": 1_206_390_000})
-    assert sensor._attr_native_value == round(113 / (1_206_390_000 / 1e9), 1)
-
-
-def test_tokens_per_second_zero_eval_count_gives_none(mock_config_entry):
-    sensor = HailoTokensPerSecondSensor(mock_config_entry)
-    sensor._update_from_metrics({"eval_count": 0, "eval_duration": 1_000_000_000})
+def test_response_chars_zero_gives_none(mock_config_entry):
+    sensor = HailoResponseCharsSensor(mock_config_entry)
+    sensor._update_from_metrics({"response_chars": 0})
     assert sensor._attr_native_value is None
 
 
-def test_tokens_per_second_zero_eval_duration_gives_none(mock_config_entry):
-    """Guard against division by zero when eval_duration is 0."""
-    sensor = HailoTokensPerSecondSensor(mock_config_entry)
-    sensor._update_from_metrics({"eval_count": 50, "eval_duration": 0})
-    assert sensor._attr_native_value is None
-
-
-def test_tokens_per_second_missing_keys_give_none(mock_config_entry):
-    sensor = HailoTokensPerSecondSensor(mock_config_entry)
-    sensor._update_from_metrics({})
-    assert sensor._attr_native_value is None
-
-
-# ---------------------------------------------------------------------------
-# HailoTokenCountSensor metric computation
-# ---------------------------------------------------------------------------
-
-
-def test_token_count_from_eval_count(mock_config_entry):
-    sensor = HailoTokenCountSensor(mock_config_entry)
-    sensor._update_from_metrics({"eval_count": 113})
-    assert sensor._attr_native_value == 113
-
-
-def test_token_count_zero_gives_none(mock_config_entry):
-    sensor = HailoTokenCountSensor(mock_config_entry)
-    sensor._update_from_metrics({"eval_count": 0})
-    assert sensor._attr_native_value is None
-
-
-def test_token_count_missing_key_gives_none(mock_config_entry):
-    sensor = HailoTokenCountSensor(mock_config_entry)
+def test_response_chars_missing_key_gives_none(mock_config_entry):
+    sensor = HailoResponseCharsSensor(mock_config_entry)
     sensor._update_from_metrics({})
     assert sensor._attr_native_value is None
 
@@ -183,8 +139,8 @@ def test_token_count_missing_key_gives_none(mock_config_entry):
 
 
 @pytest.mark.asyncio
-async def test_async_added_to_hass_subscribes_to_signal(mock_config_entry):
-    """async_added_to_hass connects to the metrics dispatcher signal."""
+async def test_async_added_to_hass_subscribes_to_signals(mock_config_entry):
+    """async_added_to_hass connects to both dispatcher signals."""
     sensor = HailoResponseTimeSensor(mock_config_entry)
     sensor.hass = MagicMock()
     sensor.async_on_remove = MagicMock()
@@ -196,12 +152,10 @@ async def test_async_added_to_hass_subscribes_to_signal(mock_config_entry):
     ) as mock_connect:
         await sensor.async_added_to_hass()
 
-        mock_connect.assert_called_once_with(
-            sensor.hass,
-            SIGNAL_METRICS_UPDATED.format(mock_config_entry.entry_id),
-            sensor._handle_metrics,
-        )
-        sensor.async_on_remove.assert_called_once_with(disconnect)
+        assert mock_connect.call_count == 2
+        calls = [call.args[1] for call in mock_connect.call_args_list]
+        assert SIGNAL_METRICS_UPDATED.format(mock_config_entry.entry_id) in calls
+        assert sensor.async_on_remove.call_count == 2
 
 
 def test_handle_metrics_updates_state_and_writes(mock_config_entry):
@@ -209,7 +163,7 @@ def test_handle_metrics_updates_state_and_writes(mock_config_entry):
     sensor = HailoResponseTimeSensor(mock_config_entry)
     sensor.async_write_ha_state = MagicMock()
 
-    sensor._handle_metrics({"total_duration": 3_000_000_000, "eval_count": 50, "eval_duration": 1_000_000_000})
+    sensor._handle_metrics({"response_time": 3.0, "response_chars": 150})
 
     assert sensor._attr_native_value == 3.0
     sensor.async_write_ha_state.assert_called_once()

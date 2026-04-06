@@ -24,8 +24,7 @@ async def async_setup_entry(
     """Set up Hailo Ollama sensor entities."""
     async_add_entities([
         HailoResponseTimeSensor(entry),
-        HailoTokensPerSecondSensor(entry),
-        HailoTokenCountSensor(entry),
+        HailoResponseCharsSensor(entry),
     ])
 
 
@@ -84,7 +83,7 @@ class _HailoMetricSensor(SensorEntity):
 
 
 class HailoResponseTimeSensor(_HailoMetricSensor):
-    """Total response time for the last conversation turn."""
+    """Wall-clock response time for the last conversation turn."""
 
     _attr_translation_key = "response_time"
     _attr_device_class = SensorDeviceClass.DURATION
@@ -99,46 +98,23 @@ class HailoResponseTimeSensor(_HailoMetricSensor):
         self._attr_unique_id = f"{entry.entry_id}_response_time"
 
     def _update_from_metrics(self, metrics: dict) -> None:
-        total_ns = metrics.get("total_duration", 0)
-        self._attr_native_value = round(total_ns / 1e9, 2) if total_ns else None
+        rt = metrics.get("response_time")
+        self._attr_native_value = rt if rt else None
 
 
-class HailoTokensPerSecondSensor(_HailoMetricSensor):
-    """Token generation speed for the last conversation turn."""
+class HailoResponseCharsSensor(_HailoMetricSensor):
+    """Number of characters in the last response."""
 
-    _attr_translation_key = "tokens_per_second"
+    _attr_translation_key = "response_chars"
     _attr_state_class = SensorStateClass.MEASUREMENT
-    _attr_native_unit_of_measurement = "tok/s"
-    _attr_suggested_display_precision = 1
-    _attr_native_value: float | None = None
-
-    def __init__(self, entry: ConfigEntry) -> None:
-        """Initialize."""
-        super().__init__(entry)
-        self._attr_unique_id = f"{entry.entry_id}_tokens_per_second"
-
-    def _update_from_metrics(self, metrics: dict) -> None:
-        eval_count = metrics.get("eval_count", 0)
-        eval_duration_ns = metrics.get("eval_duration", 0)
-        if eval_count and eval_duration_ns:
-            self._attr_native_value = round(eval_count / (eval_duration_ns / 1e9), 1)
-        else:
-            self._attr_native_value = None
-
-
-class HailoTokenCountSensor(_HailoMetricSensor):
-    """Number of tokens generated in the last conversation turn."""
-
-    _attr_translation_key = "token_count"
-    _attr_state_class = SensorStateClass.MEASUREMENT
-    _attr_native_unit_of_measurement = "tokens"
+    _attr_native_unit_of_measurement = "chars"
     _attr_native_value: int | None = None
 
     def __init__(self, entry: ConfigEntry) -> None:
         """Initialize."""
         super().__init__(entry)
-        self._attr_unique_id = f"{entry.entry_id}_token_count"
+        self._attr_unique_id = f"{entry.entry_id}_response_chars"
 
     def _update_from_metrics(self, metrics: dict) -> None:
-        eval_count = metrics.get("eval_count", 0)
-        self._attr_native_value = eval_count if eval_count else None
+        chars = metrics.get("response_chars")
+        self._attr_native_value = chars if chars else None

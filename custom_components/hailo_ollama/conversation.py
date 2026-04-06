@@ -144,11 +144,6 @@ class HailoOllamaClientMixin:
                 f"Raw: {json.dumps(data)[:300]}"
             )
 
-        self._last_metrics = {
-            "eval_count": data.get("eval_count", 0),
-            "eval_duration": data.get("eval_duration", 0),
-            "total_duration": data.get("total_duration", 0),
-        }
         return content
 
     async def _call_streaming(
@@ -223,11 +218,6 @@ class HailoOllamaClientMixin:
             raise HailoError("Streaming returned 0 chunks")
 
         last = chunks[-1]
-        self._last_metrics = {
-            "eval_count": last.get("eval_count", 0),
-            "eval_duration": last.get("eval_duration", 0),
-            "total_duration": last.get("total_duration", 0),
-        }
 
         # Last done=true chunk has full content on some server versions
         if last.get("done") and last.get("message", {}).get("content"):
@@ -276,7 +266,6 @@ class HailoOllamaConversationEntity(
         self._attr_unique_id = entry.entry_id
         self._base_url = f"http://{self._host}:{self._port}"
         self._conversations: dict[str, list[dict[str, Any]]] = {}
-        self._last_metrics: dict[str, int] = {}
 
     async def async_added_to_hass(self) -> None:
         """Subscribe to availability changes."""
@@ -362,16 +351,13 @@ class HailoOllamaConversationEntity(
         messages.append(user_message)
 
         # Call Hailo with configured mode
+        success = False
         try:
             if self._streaming:
                 response_text = await self._call_streaming(messages)
             else:
                 response_text = await self._call_non_streaming(messages)
-            async_dispatcher_send(
-                self.hass,
-                SIGNAL_METRICS_UPDATED.format(self._entry.entry_id),
-                dict(self._last_metrics),
-            )
+            success = True
         except HailoError as err:
             _LOGGER.error("Hailo error: %s", err)
             response_text = f"Sorry, I encountered an error: {err}"
@@ -379,6 +365,12 @@ class HailoOllamaConversationEntity(
         elapsed = time.monotonic() - t0
 
         clean_text = _process_thinking(response_text, self._show_thinking)
+        if success:
+            async_dispatcher_send(
+                self.hass,
+                SIGNAL_METRICS_UPDATED.format(self._entry.entry_id),
+                {"response_time": round(elapsed, 2), "response_chars": len(clean_text)},
+            )
         if clean_text != response_text.strip():
             _LOGGER.debug(
                 "Processed <think> tags: %d → %d chars",

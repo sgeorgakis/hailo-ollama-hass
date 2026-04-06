@@ -32,8 +32,7 @@
   "entity": {
     "sensor": {
       "response_time": {"name": "Tempo de resposta"},
-      "tokens_per_second": {"name": "Tokens por segundo"},
-      "token_count": {"name": "Contagem de tokens"}
+      "response_chars": {"name": "Caracteres de resposta"}
     }
   },
   "options": {
