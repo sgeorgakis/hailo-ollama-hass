@@ -29,6 +29,13 @@
       "no_models": "Keine Modelle auf dem Gerät gefunden"
     }
   },
+  "entity": {
+    "sensor": {
+      "response_time": {"name": "Antwortzeit"},
+      "tokens_per_second": {"name": "Token pro Sekunde"},
+      "token_count": {"name": "Token-Anzahl"}
+    }
+  },
   "options": {
     "step": {
       "init": {

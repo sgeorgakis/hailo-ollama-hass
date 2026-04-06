@@ -29,6 +29,13 @@
       "no_models": "Δεν βρέθηκαν μοντέλα στη συσκευή"
     }
   },
+  "entity": {
+    "sensor": {
+      "response_time": {"name": "Χρόνος απόκρισης"},
+      "tokens_per_second": {"name": "Tokens ανά δευτερόλεπτο"},
+      "token_count": {"name": "Πλήθος tokens"}
+    }
+  },
   "options": {
     "step": {
       "init": {
