@@ -11,6 +11,7 @@ import voluptuous as vol
 
 from homeassistant.config_entries import ConfigEntry, ConfigFlow, ConfigFlowResult, OptionsFlow
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
+from homeassistant.helpers.selector import SelectSelector, SelectSelectorConfig
 
 from .const import (
     CONF_HOST,
@@ -266,17 +267,14 @@ class HailoOllamaConfigFlow(ConfigFlow, domain=DOMAIN):
                 _LOGGER.error("Failed to pull model '%s': %s", model_name, msg)
                 errors[CONF_MODEL_TO_PULL] = "pull_failed"
 
-        if self._available_models:
-            model_schema = vol.In(self._available_models)
-            default = self._available_models[0]
-        else:
-            model_schema = str
-            default = ""
+        downloadable = [m for m in self._available_models if m not in self._models]
 
         return self.async_show_form(
             step_id="pull_model",
             data_schema=vol.Schema({
-                vol.Required(CONF_MODEL_TO_PULL, default=default): model_schema,
+                vol.Required(CONF_MODEL_TO_PULL): SelectSelector(
+                    SelectSelectorConfig(options=downloadable)
+                ),
             }),
             errors=errors,
         )
@@ -389,17 +387,14 @@ class HailoOllamaOptionsFlow(OptionsFlow):
                 _LOGGER.error("Failed to pull model '%s': %s", model_name, msg)
                 errors[CONF_MODEL_TO_PULL] = "pull_failed"
 
-        if self._available_models:
-            model_schema = vol.In(self._available_models)
-            default = self._available_models[0]
-        else:
-            model_schema = str
-            default = ""
+        downloadable = [m for m in self._available_models if m not in self._models]
 
         return self.async_show_form(
             step_id="pull_model",
             data_schema=vol.Schema({
-                vol.Required(CONF_MODEL_TO_PULL, default=default): model_schema,
+                vol.Required(CONF_MODEL_TO_PULL): SelectSelector(
+                    SelectSelectorConfig(options=downloadable)
+                ),
             }),
             errors=errors,
         )

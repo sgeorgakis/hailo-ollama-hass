@@ -29,9 +29,6 @@
         "description": "Selecciona un modelo para descargar desde tu dispositivo Hailo.",
         "data": {
           "model_to_pull": "Modelo"
-        },
-        "data_description": {
-          "model_to_pull": "Selecciona entre los modelos disponibles o escribe un nombre de modelo (p. ej. llama3.2:3b) si la lista no está disponible."
         }
       }
     },
@@ -69,9 +66,6 @@
         "description": "Selecciona un modelo para descargar desde tu dispositivo Hailo.",
         "data": {
           "model_to_pull": "Modelo"
-        },
-        "data_description": {
-          "model_to_pull": "Selecciona entre los modelos disponibles o escribe un nombre de modelo (p. ej. llama3.2:3b) si la lista no está disponible."
         }
       }
     }

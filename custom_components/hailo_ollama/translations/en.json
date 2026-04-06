@@ -29,9 +29,6 @@
         "description": "Select a model to download from your Hailo device.",
         "data": {
           "model_to_pull": "Model"
-        },
-        "data_description": {
-          "model_to_pull": "Select from the available models, or type a model name (e.g. llama3.2:3b) if the list is unavailable."
         }
       }
     },
@@ -69,9 +66,6 @@
         "description": "Select a model to download from your Hailo device.",
         "data": {
           "model_to_pull": "Model"
-        },
-        "data_description": {
-          "model_to_pull": "Select from the available models, or type a model name (e.g. llama3.2:3b) if the list is unavailable."
         }
       }
     }

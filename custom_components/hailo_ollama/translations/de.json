@@ -29,9 +29,6 @@
         "description": "Wählen Sie ein Modell zum Herunterladen von Ihrem Hailo-Gerät.",
         "data": {
           "model_to_pull": "Modell"
-        },
-        "data_description": {
-          "model_to_pull": "Wählen Sie aus den verfügbaren Modellen oder geben Sie einen Modellnamen ein (z.B. llama3.2:3b), falls die Liste nicht verfügbar ist."
         }
       }
     },
@@ -69,9 +66,6 @@
         "description": "Wählen Sie ein Modell zum Herunterladen von Ihrem Hailo-Gerät.",
         "data": {
           "model_to_pull": "Modell"
-        },
-        "data_description": {
-          "model_to_pull": "Wählen Sie aus den verfügbaren Modellen oder geben Sie einen Modellnamen ein (z.B. llama3.2:3b), falls die Liste nicht verfügbar ist."
         }
       }
     }
