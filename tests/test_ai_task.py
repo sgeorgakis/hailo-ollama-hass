@@ -301,3 +301,34 @@ async def test_generate_data_strips_thinking_tags():
     call_kwargs = mock_result_cls.call_args.kwargs
     assert call_kwargs["data"] == "The real answer."
     assert "<think>" not in call_kwargs["data"]
+
+
+# ---------------------------------------------------------------------------
+# Availability
+# ---------------------------------------------------------------------------
+
+
+def test_available_defaults_to_true_when_no_domain_data(mock_config_entry):
+    """available returns True when hass.data has no domain entry."""
+    entity = HailoAITaskEntity(mock_config_entry)
+    hass = MagicMock()
+    hass.data = {}
+    entity.hass = hass
+    assert entity.available is True
+
+
+def test_available_reads_from_domain_data(mock_config_entry):
+    """available reflects the value stored in hass.data[DOMAIN][entry_id]."""
+    entity = HailoAITaskEntity(mock_config_entry)
+    hass = MagicMock()
+    hass.data = {DOMAIN: {mock_config_entry.entry_id: {"available": False}}}
+    entity.hass = hass
+    assert entity.available is False
+
+
+def test_available_true_when_domain_data_says_available(mock_config_entry):
+    entity = HailoAITaskEntity(mock_config_entry)
+    hass = MagicMock()
+    hass.data = {DOMAIN: {mock_config_entry.entry_id: {"available": True}}}
+    entity.hass = hass
+    assert entity.available is True

@@ -13,7 +13,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
-from .const import DOMAIN, SIGNAL_METRICS_UPDATED
+from .const import DOMAIN, SIGNAL_AVAILABILITY_CHANGED, SIGNAL_METRICS_UPDATED
 
 
 async def async_setup_entry(
@@ -45,13 +45,32 @@ class _HailoMetricSensor(SensorEntity):
         return {"identifiers": {(DOMAIN, self._entry.entry_id)}}
 
     async def async_added_to_hass(self) -> None:
-        """Subscribe to metrics updates."""
+        """Subscribe to metrics and availability updates."""
         self.async_on_remove(
             async_dispatcher_connect(
                 self.hass,
                 SIGNAL_METRICS_UPDATED.format(self._entry.entry_id),
                 self._handle_metrics,
             )
+        )
+        self.async_on_remove(
+            async_dispatcher_connect(
+                self.hass,
+                SIGNAL_AVAILABILITY_CHANGED.format(self._entry.entry_id),
+                self._handle_availability,
+            )
+        )
+
+    def _handle_availability(self, available: bool) -> None:
+        self.async_write_ha_state()
+
+    @property
+    def available(self) -> bool:
+        """Return True when the Hailo-Ollama server is reachable."""
+        return (
+            self.hass.data.get(DOMAIN, {})
+            .get(self._entry.entry_id, {})
+            .get("available", True)
         )
 
     def _handle_metrics(self, metrics: dict) -> None:
