@@ -16,13 +16,22 @@
           "model": "Modelo",
           "system_prompt": "Instrucción del sistema",
           "streaming": "Usar respuestas en streaming",
-          "show_thinking": "Mostrar proceso de razonamiento",
-          "pull_model_name": "Descargar nuevo modelo"
+          "show_thinking": "Mostrar proceso de razonamiento"
         },
         "data_description": {
           "streaming": "Activa para recibir tokens de forma progresiva. Desactiva para recibir una única respuesta completa (más sencillo, pero tendrás que esperar hasta el final).",
           "show_thinking": "Cuando está activado, el razonamiento dentro de las etiquetas &lt;think&gt; se incluirá en la respuesta. Desactiva para devolver solo la respuesta final.",
-          "pull_model_name": "Introduce un nombre de modelo (p. ej. llama3.2:3b) para descargarlo antes de seleccionarlo. Déjalo vacío para omitir."
+          "model": "Selecciona un modelo descargado o elige \"Descargar nuevo modelo…\" para obtener uno primero."
+        }
+      },
+      "pull_model": {
+        "title": "Descargar modelo",
+        "description": "Selecciona un modelo para descargar desde tu dispositivo Hailo.",
+        "data": {
+          "model_to_pull": "Modelo"
+        },
+        "data_description": {
+          "model_to_pull": "Selecciona entre los modelos disponibles o escribe un nombre de modelo (p. ej. llama3.2:3b) si la lista no está disponible."
         }
       }
     },
@@ -47,13 +56,22 @@
           "model": "Modelo",
           "system_prompt": "Instrucción del sistema",
           "streaming": "Usar respuestas en streaming",
-          "show_thinking": "Mostrar proceso de razonamiento",
-          "pull_model_name": "Descargar nuevo modelo"
+          "show_thinking": "Mostrar proceso de razonamiento"
         },
         "data_description": {
           "streaming": "Activa para recibir tokens de forma progresiva. Desactiva para recibir una única respuesta completa (más sencillo, pero tendrás que esperar hasta el final).",
           "show_thinking": "Cuando está activado, el razonamiento dentro de las etiquetas &lt;think&gt; se incluirá en la respuesta. Desactiva para devolver solo la respuesta final.",
-          "pull_model_name": "Introduce un nombre de modelo (p. ej. llama3.2:3b) para descargarlo antes de seleccionarlo. Déjalo vacío para omitir."
+          "model": "Selecciona un modelo descargado o elige \"Descargar nuevo modelo…\" para obtener uno primero."
+        }
+      },
+      "pull_model": {
+        "title": "Descargar modelo",
+        "description": "Selecciona un modelo para descargar desde tu dispositivo Hailo.",
+        "data": {
+          "model_to_pull": "Modelo"
+        },
+        "data_description": {
+          "model_to_pull": "Selecciona entre los modelos disponibles o escribe un nombre de modelo (p. ej. llama3.2:3b) si la lista no está disponible."
         }
       }
     }

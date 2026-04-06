@@ -16,13 +16,22 @@
           "model": "Modell",
           "system_prompt": "Systemaufforderung",
           "streaming": "Streaming-Antworten verwenden",
-          "show_thinking": "Denkprozess anzeigen",
-          "pull_model_name": "Neues Modell herunterladen"
+          "show_thinking": "Denkprozess anzeigen"
         },
         "data_description": {
           "streaming": "Aktivieren für Token-für-Token-Streaming. Deaktivieren für eine einzelne Antwort (einfacher, aber Sie warten auf die vollständige Antwort).",
           "show_thinking": "Wenn aktiviert, wird der Denkprozess innerhalb von &lt;think&gt;-Tags in der Antwort angezeigt. Deaktivieren, um nur die endgültige Antwort zurückzugeben.",
-          "pull_model_name": "Modellnamen eingeben (z.B. llama3.2:3b), um es vor der Auswahl herunterzuladen. Leer lassen zum Überspringen."
+          "model": "Wählen Sie ein heruntergeladenes Modell oder „Neues Modell herunterladen…", um zuerst eines zu laden."
+        }
+      },
+      "pull_model": {
+        "title": "Modell herunterladen",
+        "description": "Wählen Sie ein Modell zum Herunterladen von Ihrem Hailo-Gerät.",
+        "data": {
+          "model_to_pull": "Modell"
+        },
+        "data_description": {
+          "model_to_pull": "Wählen Sie aus den verfügbaren Modellen oder geben Sie einen Modellnamen ein (z.B. llama3.2:3b), falls die Liste nicht verfügbar ist."
         }
       }
     },
@@ -47,13 +56,22 @@
           "model": "Modell",
           "system_prompt": "Systemaufforderung",
           "streaming": "Streaming-Antworten verwenden",
-          "show_thinking": "Denkprozess anzeigen",
-          "pull_model_name": "Neues Modell herunterladen"
+          "show_thinking": "Denkprozess anzeigen"
         },
         "data_description": {
           "streaming": "Aktivieren für Token-für-Token-Streaming. Deaktivieren für eine einzelne Antwort (einfacher, aber Sie warten auf die vollständige Antwort).",
           "show_thinking": "Wenn aktiviert, wird der Denkprozess innerhalb von &lt;think&gt;-Tags in der Antwort angezeigt. Deaktivieren, um nur die endgültige Antwort zurückzugeben.",
-          "pull_model_name": "Modellnamen eingeben (z.B. llama3.2:3b), um es vor der Auswahl herunterzuladen. Leer lassen zum Überspringen."
+          "model": "Wählen Sie ein heruntergeladenes Modell oder „Neues Modell herunterladen…", um zuerst eines zu laden."
+        }
+      },
+      "pull_model": {
+        "title": "Modell herunterladen",
+        "description": "Wählen Sie ein Modell zum Herunterladen von Ihrem Hailo-Gerät.",
+        "data": {
+          "model_to_pull": "Modell"
+        },
+        "data_description": {
+          "model_to_pull": "Wählen Sie aus den verfügbaren Modellen oder geben Sie einen Modellnamen ein (z.B. llama3.2:3b), falls die Liste nicht verfügbar ist."
         }
       }
     }

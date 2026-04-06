@@ -16,13 +16,22 @@
           "model": "Modèle",
           "system_prompt": "Invite système",
           "streaming": "Utiliser les réponses en streaming",
-          "show_thinking": "Afficher le processus de réflexion",
-          "pull_model_name": "Télécharger un nouveau modèle"
+          "show_thinking": "Afficher le processus de réflexion"
         },
         "data_description": {
           "streaming": "Activez pour recevoir les tokens au fur et à mesure. Désactivez pour obtenir une réponse unique (plus simple, mais vous attendez la réponse complète).",
           "show_thinking": "Lorsqu'activé, le raisonnement contenu dans les balises &lt;think&gt; sera inclus dans la réponse. Désactivez pour ne renvoyer que la réponse finale.",
-          "pull_model_name": "Entrez un nom de modèle (ex. llama3.2:3b) pour le télécharger avant de le sélectionner. Laissez vide pour ignorer."
+          "model": "Sélectionnez un modèle téléchargé ou choisissez « Télécharger un nouveau modèle… » pour en obtenir un d'abord."
+        }
+      },
+      "pull_model": {
+        "title": "Télécharger un modèle",
+        "description": "Sélectionnez un modèle à télécharger depuis votre appareil Hailo.",
+        "data": {
+          "model_to_pull": "Modèle"
+        },
+        "data_description": {
+          "model_to_pull": "Sélectionnez parmi les modèles disponibles ou saisissez un nom de modèle (ex. llama3.2:3b) si la liste n'est pas disponible."
         }
       }
     },
@@ -47,13 +56,22 @@
           "model": "Modèle",
           "system_prompt": "Invite système",
           "streaming": "Utiliser les réponses en streaming",
-          "show_thinking": "Afficher le processus de réflexion",
-          "pull_model_name": "Télécharger un nouveau modèle"
+          "show_thinking": "Afficher le processus de réflexion"
         },
         "data_description": {
           "streaming": "Activez pour recevoir les tokens au fur et à mesure. Désactivez pour obtenir une réponse unique (plus simple, mais vous attendez la réponse complète).",
           "show_thinking": "Lorsqu'activé, le raisonnement contenu dans les balises &lt;think&gt; sera inclus dans la réponse. Désactivez pour ne renvoyer que la réponse finale.",
-          "pull_model_name": "Entrez un nom de modèle (ex. llama3.2:3b) pour le télécharger avant de le sélectionner. Laissez vide pour ignorer."
+          "model": "Sélectionnez un modèle téléchargé ou choisissez « Télécharger un nouveau modèle… » pour en obtenir un d'abord."
+        }
+      },
+      "pull_model": {
+        "title": "Télécharger un modèle",
+        "description": "Sélectionnez un modèle à télécharger depuis votre appareil Hailo.",
+        "data": {
+          "model_to_pull": "Modèle"
+        },
+        "data_description": {
+          "model_to_pull": "Sélectionnez parmi les modèles disponibles ou saisissez un nom de modèle (ex. llama3.2:3b) si la liste n'est pas disponible."
         }
       }
     }

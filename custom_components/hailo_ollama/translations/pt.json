@@ -16,13 +16,22 @@
           "model": "Modelo",
           "system_prompt": "Instrução do sistema",
           "streaming": "Utilizar respostas em streaming",
-          "show_thinking": "Mostrar processo de raciocínio",
-          "pull_model_name": "Transferir novo modelo"
+          "show_thinking": "Mostrar processo de raciocínio"
         },
         "data_description": {
           "streaming": "Ative para receber tokens progressivamente. Desative para obter uma única resposta completa (mais simples, mas terá de aguardar pela resposta integral).",
           "show_thinking": "Quando ativado, o raciocínio dentro das etiquetas &lt;think&gt; será incluído na resposta. Desative para devolver apenas a resposta final.",
-          "pull_model_name": "Introduza um nome de modelo (ex. llama3.2:3b) para o transferir antes de o selecionar. Deixe vazio para ignorar."
+          "model": "Selecione um modelo transferido ou escolha «Transferir novo modelo…» para obter um primeiro."
+        }
+      },
+      "pull_model": {
+        "title": "Transferir modelo",
+        "description": "Selecione um modelo para transferir do seu dispositivo Hailo.",
+        "data": {
+          "model_to_pull": "Modelo"
+        },
+        "data_description": {
+          "model_to_pull": "Selecione entre os modelos disponíveis ou introduza um nome de modelo (ex. llama3.2:3b) se a lista não estiver disponível."
         }
       }
     },
@@ -47,13 +56,22 @@
           "model": "Modelo",
           "system_prompt": "Instrução do sistema",
           "streaming": "Utilizar respostas em streaming",
-          "show_thinking": "Mostrar processo de raciocínio",
-          "pull_model_name": "Transferir novo modelo"
+          "show_thinking": "Mostrar processo de raciocínio"
         },
         "data_description": {
           "streaming": "Ative para receber tokens progressivamente. Desative para obter uma única resposta completa (mais simples, mas terá de aguardar pela resposta integral).",
           "show_thinking": "Quando ativado, o raciocínio dentro das etiquetas &lt;think&gt; será incluído na resposta. Desative para devolver apenas a resposta final.",
-          "pull_model_name": "Introduza um nome de modelo (ex. llama3.2:3b) para o transferir antes de o selecionar. Deixe vazio para ignorar."
+          "model": "Selecione um modelo transferido ou escolha «Transferir novo modelo…» para obter um primeiro."
+        }
+      },
+      "pull_model": {
+        "title": "Transferir modelo",
+        "description": "Selecione um modelo para transferir do seu dispositivo Hailo.",
+        "data": {
+          "model_to_pull": "Modelo"
+        },
+        "data_description": {
+          "model_to_pull": "Selecione entre os modelos disponíveis ou introduza um nome de modelo (ex. llama3.2:3b) se a lista não estiver disponível."
         }
       }
     }

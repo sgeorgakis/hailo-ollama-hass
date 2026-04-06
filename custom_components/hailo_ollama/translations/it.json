@@ -16,13 +16,22 @@
           "model": "Modello",
           "system_prompt": "Istruzione di sistema",
           "streaming": "Usa risposte in streaming",
-          "show_thinking": "Mostra il processo di ragionamento",
-          "pull_model_name": "Scarica un nuovo modello"
+          "show_thinking": "Mostra il processo di ragionamento"
         },
         "data_description": {
           "streaming": "Attiva per ricevere i token in modo progressivo. Disattiva per ricevere un'unica risposta completa (più semplice, ma dovrai attendere la risposta intera).",
           "show_thinking": "Se attivato, il ragionamento all'interno dei tag &lt;think&gt; verrà incluso nella risposta. Disattiva per restituire solo la risposta finale.",
-          "pull_model_name": "Inserisci un nome modello (es. llama3.2:3b) per scaricarlo prima di selezionarlo. Lascia vuoto per ignorare."
+          "model": "Seleziona un modello scaricato oppure scegli «Scarica un nuovo modello…» per scaricarne uno prima."
+        }
+      },
+      "pull_model": {
+        "title": "Scarica un modello",
+        "description": "Seleziona un modello da scaricare dal tuo dispositivo Hailo.",
+        "data": {
+          "model_to_pull": "Modello"
+        },
+        "data_description": {
+          "model_to_pull": "Seleziona tra i modelli disponibili o digita un nome modello (es. llama3.2:3b) se la lista non è disponibile."
         }
       }
     },
@@ -47,13 +56,22 @@
           "model": "Modello",
           "system_prompt": "Istruzione di sistema",
           "streaming": "Usa risposte in streaming",
-          "show_thinking": "Mostra il processo di ragionamento",
-          "pull_model_name": "Scarica un nuovo modello"
+          "show_thinking": "Mostra il processo di ragionamento"
         },
         "data_description": {
           "streaming": "Attiva per ricevere i token in modo progressivo. Disattiva per ricevere un'unica risposta completa (più semplice, ma dovrai attendere la risposta intera).",
           "show_thinking": "Se attivato, il ragionamento all'interno dei tag &lt;think&gt; verrà incluso nella risposta. Disattiva per restituire solo la risposta finale.",
-          "pull_model_name": "Inserisci un nome modello (es. llama3.2:3b) per scaricarlo prima di selezionarlo. Lascia vuoto per ignorare."
+          "model": "Seleziona un modello scaricato oppure scegli «Scarica un nuovo modello…» per scaricarne uno prima."
+        }
+      },
+      "pull_model": {
+        "title": "Scarica un modello",
+        "description": "Seleziona un modello da scaricare dal tuo dispositivo Hailo.",
+        "data": {
+          "model_to_pull": "Modello"
+        },
+        "data_description": {
+          "model_to_pull": "Seleziona tra i modelli disponibili o digita un nome modello (es. llama3.2:3b) se la lista non è disponibile."
         }
       }
     }
