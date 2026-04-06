@@ -25,12 +25,10 @@ from .const import (
     CONF_SHOW_THINKING,
     CONF_STREAMING,
     CONF_SYSTEM_PROMPT,
-    CONF_VISION_MODEL,
     DEFAULT_SHOW_THINKING,
     DEFAULT_STREAMING,
     DEFAULT_SYSTEM_PROMPT,
     DEFAULT_TIMEOUT,
-    DEFAULT_VISION_MODEL,
     DOMAIN,
 )
 
@@ -261,17 +259,14 @@ class HailoOllamaConversationEntity(
         self._show_thinking: bool = opts.get(
             CONF_SHOW_THINKING, entry.data.get(CONF_SHOW_THINKING, DEFAULT_SHOW_THINKING)
         )
-        self._vision_model: bool = opts.get(
-            CONF_VISION_MODEL, entry.data.get(CONF_VISION_MODEL, DEFAULT_VISION_MODEL)
-        )
         self._attr_unique_id = entry.entry_id
         self._base_url = f"http://{self._host}:{self._port}"
         self._conversations: dict[str, list[dict[str, Any]]] = {}
 
     @property
-    def supported_languages(self) -> list[str]:
+    def supported_languages(self) -> str:
         """Return supported languages."""
-        return ["en"]
+        return conversation.MATCH_ALL
 
     @property
     def device_info(self) -> dict[str, Any]:
@@ -287,7 +282,7 @@ class HailoOllamaConversationEntity(
         self, text: str, attachments: list | None
     ) -> dict[str, Any]:
         """Build the user message dict, encoding image attachments when applicable."""
-        if not (self._vision_model and attachments):
+        if not attachments:
             return {"role": "user", "content": text}
 
         images: list[str] = []

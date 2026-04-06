@@ -104,7 +104,6 @@ def test_entity_init(mock_config_entry):
     assert entity._system_prompt == DEFAULT_SYSTEM_PROMPT
     assert entity._streaming is False
     assert entity._show_thinking is False
-    assert entity._vision_model is False
     assert entity._attr_unique_id == "test_entry_id_ai_task"
     assert entity._base_url == "http://localhost:8000"
 

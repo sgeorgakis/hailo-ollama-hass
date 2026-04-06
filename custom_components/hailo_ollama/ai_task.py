@@ -23,11 +23,9 @@ from .const import (
     CONF_SHOW_THINKING,
     CONF_STREAMING,
     CONF_SYSTEM_PROMPT,
-    CONF_VISION_MODEL,
     DEFAULT_SHOW_THINKING,
     DEFAULT_STREAMING,
     DEFAULT_SYSTEM_PROMPT,
-    DEFAULT_VISION_MODEL,
     DOMAIN,
 )
 from .conversation import HailoError, HailoOllamaClientMixin, _process_thinking
@@ -66,9 +64,6 @@ class HailoAITaskEntity(AITaskEntity, HailoOllamaClientMixin):
         )
         self._show_thinking: bool = opts.get(
             CONF_SHOW_THINKING, entry.data.get(CONF_SHOW_THINKING, DEFAULT_SHOW_THINKING)
-        )
-        self._vision_model: bool = opts.get(
-            CONF_VISION_MODEL, entry.data.get(CONF_VISION_MODEL, DEFAULT_VISION_MODEL)
         )
         self._attr_unique_id = f"{entry.entry_id}_ai_task"
         self._base_url = f"http://{self._host}:{self._port}"

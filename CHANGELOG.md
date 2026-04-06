@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.2.2](https://github.com/sgeorgakis/hailo-ollama-hass/compare/v0.2.1...v0.2.2) (2026-04-06)
+
+
+### Features
+
+* expose AI task platform so the integration appears in the HA AI task picker ([eb13aa2](https://github.com/sgeorgakis/hailo-ollama-hass/commit/eb13aa2281f06857cab62bcdc734fa4ce39fc787))
+
+
+### Bug Fixes
+
+* use `Platform.AI_TASK` enum instead of bare string so the platform registers correctly ([eb13aa2](https://github.com/sgeorgakis/hailo-ollama-hass/commit/eb13aa2281f06857cab62bcdc734fa4ce39fc787))
+* correct `_async_generate_data` signature and pass `conversation_id` to `GenDataTaskResult` ([eb13aa2](https://github.com/sgeorgakis/hailo-ollama-hass/commit/eb13aa2281f06857cab62bcdc734fa4ce39fc787))
+* use `_attr_supported_features` so entity is visible in the AI task agent picker ([eb13aa2](https://github.com/sgeorgakis/hailo-ollama-hass/commit/eb13aa2281f06857cab62bcdc734fa4ce39fc787))
+* reload config entry on options change so updated settings take effect without HA restart ([eb13aa2](https://github.com/sgeorgakis/hailo-ollama-hass/commit/eb13aa2281f06857cab62bcdc734fa4ce39fc787))
+
 ## [0.2.1](https://github.com/sgeorgakis/hailo-ollama-hass/compare/v0.2.0...v0.2.1) (2026-04-03)
 
 

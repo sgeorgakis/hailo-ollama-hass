@@ -18,14 +18,12 @@ from .const import (
     CONF_SHOW_THINKING,
     CONF_STREAMING,
     CONF_SYSTEM_PROMPT,
-    CONF_VISION_MODEL,
     DEFAULT_HOST,
     DEFAULT_MODEL,
     DEFAULT_PORT,
     DEFAULT_SHOW_THINKING,
     DEFAULT_STREAMING,
     DEFAULT_SYSTEM_PROMPT,
-    DEFAULT_VISION_MODEL,
     DOMAIN,
 )
 
@@ -146,9 +144,6 @@ class HailoOllamaConfigFlow(ConfigFlow, domain=DOMAIN):
                     CONF_SHOW_THINKING: user_input.get(
                         CONF_SHOW_THINKING, DEFAULT_SHOW_THINKING
                     ),
-                    CONF_VISION_MODEL: user_input.get(
-                        CONF_VISION_MODEL, DEFAULT_VISION_MODEL
-                    ),
                 },
             )
 
@@ -170,9 +165,6 @@ class HailoOllamaConfigFlow(ConfigFlow, domain=DOMAIN):
                 ): bool,
                 vol.Optional(
                     CONF_SHOW_THINKING, default=DEFAULT_SHOW_THINKING
-                ): bool,
-                vol.Optional(
-                    CONF_VISION_MODEL, default=DEFAULT_VISION_MODEL
                 ): bool,
             }),
         )
@@ -235,10 +227,6 @@ class HailoOllamaOptionsFlow(OptionsFlow):
                 vol.Optional(
                     CONF_SHOW_THINKING,
                     default=current.get(CONF_SHOW_THINKING, DEFAULT_SHOW_THINKING),
-                ): bool,
-                vol.Optional(
-                    CONF_VISION_MODEL,
-                    default=current.get(CONF_VISION_MODEL, DEFAULT_VISION_MODEL),
                 ): bool,
             }),
         )

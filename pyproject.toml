@@ -2,7 +2,7 @@
 name = "hailo-ollama-hass"
 version = "0.1.0"
 description = "Home Assistant integration for Hailo Ollama"
-requires-python = ">=3.12"
+requires-python = ">=3.13"
 
 [project.optional-dependencies]
 dev = [

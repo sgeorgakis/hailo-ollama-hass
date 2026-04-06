@@ -16,13 +16,11 @@
           "model": "Modelo",
           "system_prompt": "Instrução do sistema",
           "streaming": "Utilizar respostas em streaming",
-          "show_thinking": "Mostrar processo de raciocínio",
-          "vision_model": "Modelo de visão"
+          "show_thinking": "Mostrar processo de raciocínio"
         },
         "data_description": {
           "streaming": "Ative para receber tokens progressivamente. Desative para obter uma única resposta completa (mais simples, mas terá de aguardar pela resposta integral).",
-          "show_thinking": "Quando ativado, o raciocínio dentro das etiquetas &lt;think&gt; será incluído na resposta. Desative para devolver apenas a resposta final.",
-          "vision_model": "Ative se o seu modelo suportar entradas de imagem (ex. llava). Permite anexar imagens às mensagens de conversação."
+          "show_thinking": "Quando ativado, o raciocínio dentro das etiquetas &lt;think&gt; será incluído na resposta. Desative para devolver apenas a resposta final."
         }
       }
     },
@@ -40,13 +38,11 @@
           "model": "Modelo",
           "system_prompt": "Instrução do sistema",
           "streaming": "Utilizar respostas em streaming",
-          "show_thinking": "Mostrar processo de raciocínio",
-          "vision_model": "Modelo de visão"
+          "show_thinking": "Mostrar processo de raciocínio"
         },
         "data_description": {
           "streaming": "Ative para receber tokens progressivamente. Desative para obter uma única resposta completa (mais simples, mas terá de aguardar pela resposta integral).",
-          "show_thinking": "Quando ativado, o raciocínio dentro das etiquetas &lt;think&gt; será incluído na resposta. Desative para devolver apenas a resposta final.",
-          "vision_model": "Ative se o seu modelo suportar entradas de imagem (ex. llava). Permite anexar imagens às mensagens de conversação."
+          "show_thinking": "Quando ativado, o raciocínio dentro das etiquetas &lt;think&gt; será incluído na resposta. Desative para devolver apenas a resposta final."
         }
       }
     }

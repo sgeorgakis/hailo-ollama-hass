@@ -16,13 +16,11 @@
           "model": "Modèle",
           "system_prompt": "Invite système",
           "streaming": "Utiliser les réponses en streaming",
-          "show_thinking": "Afficher le processus de réflexion",
-          "vision_model": "Modèle de vision"
+          "show_thinking": "Afficher le processus de réflexion"
         },
         "data_description": {
           "streaming": "Activez pour recevoir les tokens au fur et à mesure. Désactivez pour obtenir une réponse unique (plus simple, mais vous attendez la réponse complète).",
-          "show_thinking": "Lorsqu'activé, le raisonnement contenu dans les balises &lt;think&gt; sera inclus dans la réponse. Désactivez pour ne renvoyer que la réponse finale.",
-          "vision_model": "Activez si votre modèle prend en charge les entrées image (ex. llava). Permet d'joindre des images aux messages de conversation."
+          "show_thinking": "Lorsqu'activé, le raisonnement contenu dans les balises &lt;think&gt; sera inclus dans la réponse. Désactivez pour ne renvoyer que la réponse finale."
         }
       }
     },
@@ -40,13 +38,11 @@
           "model": "Modèle",
           "system_prompt": "Invite système",
           "streaming": "Utiliser les réponses en streaming",
-          "show_thinking": "Afficher le processus de réflexion",
-          "vision_model": "Modèle de vision"
+          "show_thinking": "Afficher le processus de réflexion"
         },
         "data_description": {
           "streaming": "Activez pour recevoir les tokens au fur et à mesure. Désactivez pour obtenir une réponse unique (plus simple, mais vous attendez la réponse complète).",
-          "show_thinking": "Lorsqu'activé, le raisonnement contenu dans les balises &lt;think&gt; sera inclus dans la réponse. Désactivez pour ne renvoyer que la réponse finale.",
-          "vision_model": "Activez si votre modèle prend en charge les entrées image (ex. llava). Permet d'joindre des images aux messages de conversation."
+          "show_thinking": "Lorsqu'activé, le raisonnement contenu dans les balises &lt;think&gt; sera inclus dans la réponse. Désactivez pour ne renvoyer que la réponse finale."
         }
       }
     }
