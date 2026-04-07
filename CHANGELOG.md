@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.1](https://github.com/sgeorgakis/hailo-ollama-hass/compare/v1.0.0...v1.0.1) (2026-04-07)
+
+
+### Bug Fixes
+
+* decorate sensor/entity handlers with [@callback](https://github.com/callback) ([801bf4d](https://github.com/sgeorgakis/hailo-ollama-hass/commit/801bf4dd5c95a734fe79c54c17f1a5b41277ef4a))
+* decorate sensor/entity handlers with [@callback](https://github.com/callback) and dispatch metrics from ai_task ([115c7b9](https://github.com/sgeorgakis/hailo-ollama-hass/commit/115c7b9ecb856ebeda6f3b6707a8ad1c031abbc6))
+
 ## [1.0.0](https://github.com/sgeorgakis/hailo-ollama-hass/compare/v0.3.0...v1.0.0) (2026-04-06)
 
 
