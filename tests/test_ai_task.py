@@ -332,3 +332,46 @@ def test_available_true_when_domain_data_says_available(mock_config_entry):
     hass.data = {DOMAIN: {mock_config_entry.entry_id: {"available": True}}}
     entity.hass = hass
     assert entity.available is True
+
+
+# ---------------------------------------------------------------------------
+# Metrics dispatch
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.asyncio
+async def test_generate_data_dispatches_metrics():
+    """_async_generate_data dispatches SIGNAL_METRICS_UPDATED with response_time and response_chars."""
+    from custom_components.hailo_ollama.const import SIGNAL_METRICS_UPDATED
+
+    entity = _make_entity({
+        CONF_HOST: "localhost",
+        CONF_PORT: 8000,
+        CONF_MODEL: "llama3.2:3b",
+        CONF_SYSTEM_PROMPT: DEFAULT_SYSTEM_PROMPT,
+        CONF_STREAMING: False,
+    })
+    entity._call_non_streaming = AsyncMock(return_value="Sensor response.")
+
+    task = MagicMock()
+    task.instructions = "Generate data."
+
+    with patch(
+        "custom_components.hailo_ollama.ai_task.async_dispatcher_send"
+    ) as mock_send:
+        await entity._async_generate_data(task, _make_chat_log())
+
+    mock_send.assert_called_once()
+    signal = mock_send.call_args.args[1]
+    metrics = mock_send.call_args.args[2]
+    assert signal == SIGNAL_METRICS_UPDATED.format(entity._entry.entry_id)
+    assert "response_time" in metrics
+    assert metrics["response_chars"] == len("Sensor response.")
+
+
+def test_handle_availability_is_callback(mock_config_entry):
+    """_handle_availability must be decorated with @callback so HA calls it on the event loop."""
+    from homeassistant.core import is_callback
+
+    entity = HailoAITaskEntity(mock_config_entry)
+    assert is_callback(entity._handle_availability)

@@ -13,7 +13,7 @@ import aiohttp
 
 from homeassistant.components import conversation
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers import intent
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.dispatcher import async_dispatcher_connect, async_dispatcher_send
@@ -277,6 +277,7 @@ class HailoOllamaConversationEntity(
             )
         )
 
+    @callback
     def _handle_availability(self, available: bool) -> None:
         self.async_write_ha_state()
 
