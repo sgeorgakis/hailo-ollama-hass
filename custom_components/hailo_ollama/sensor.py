@@ -9,7 +9,7 @@ from homeassistant.components.sensor import (
 )
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import UnitOfTime
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
@@ -60,6 +60,7 @@ class _HailoMetricSensor(SensorEntity):
             )
         )
 
+    @callback
     def _handle_availability(self, available: bool) -> None:
         self.async_write_ha_state()
 
@@ -72,6 +73,7 @@ class _HailoMetricSensor(SensorEntity):
             .get("available", True)
         )
 
+    @callback
     def _handle_metrics(self, metrics: dict) -> None:
         """Update state from metrics dict and push to HA."""
         self._update_from_metrics(metrics)

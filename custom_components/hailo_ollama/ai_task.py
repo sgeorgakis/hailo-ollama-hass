@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import time
 from typing import Any
 
 from homeassistant.components import conversation
@@ -13,10 +14,10 @@ from homeassistant.components.ai_task import (
     GenDataTaskResult,
 )
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
-from homeassistant.helpers.dispatcher import async_dispatcher_connect
+from homeassistant.helpers.dispatcher import async_dispatcher_connect, async_dispatcher_send
 
 from .const import (
     CONF_HOST,
@@ -30,6 +31,7 @@ from .const import (
     DEFAULT_SYSTEM_PROMPT,
     DOMAIN,
     SIGNAL_AVAILABILITY_CHANGED,
+    SIGNAL_METRICS_UPDATED,
 )
 from .conversation import HailoError, HailoOllamaClientMixin, _process_thinking
 
@@ -81,6 +83,7 @@ class HailoAITaskEntity(AITaskEntity, HailoOllamaClientMixin):
             )
         )
 
+    @callback
     def _handle_availability(self, available: bool) -> None:
         self.async_write_ha_state()
 
@@ -114,6 +117,7 @@ class HailoAITaskEntity(AITaskEntity, HailoOllamaClientMixin):
             {"role": "user", "content": task.instructions},
         ]
 
+        t0 = time.monotonic()
         try:
             if self._streaming:
                 response_text = await self._call_streaming(messages)
@@ -123,7 +127,13 @@ class HailoAITaskEntity(AITaskEntity, HailoOllamaClientMixin):
             _LOGGER.error("Hailo AI task error: %s", err)
             raise
 
+        elapsed = time.monotonic() - t0
         clean_text = _process_thinking(response_text, self._show_thinking)
+        async_dispatcher_send(
+            self.hass,
+            SIGNAL_METRICS_UPDATED.format(self._entry.entry_id),
+            {"response_time": round(elapsed, 2), "response_chars": len(clean_text)},
+        )
         return GenDataTaskResult(
             conversation_id=chat_log.conversation_id,
             data=clean_text,

@@ -167,3 +167,19 @@ def test_handle_metrics_updates_state_and_writes(mock_config_entry):
 
     assert sensor._attr_native_value == 3.0
     sensor.async_write_ha_state.assert_called_once()
+
+
+def test_handle_metrics_is_callback(mock_config_entry):
+    """_handle_metrics must be decorated with @callback so HA calls it on the event loop."""
+    from homeassistant.core import is_callback
+
+    sensor = HailoResponseTimeSensor(mock_config_entry)
+    assert is_callback(sensor._handle_metrics)
+
+
+def test_handle_availability_is_callback(mock_config_entry):
+    """_handle_availability must be decorated with @callback so HA calls it on the event loop."""
+    from homeassistant.core import is_callback
+
+    sensor = HailoResponseTimeSensor(mock_config_entry)
+    assert is_callback(sensor._handle_availability)
